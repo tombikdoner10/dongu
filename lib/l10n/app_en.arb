@@ -1,0 +1,45 @@
+{
+  "@@locale": "en",
+  "appTitle": "Döngü",
+  "tagline": "Cooperate with your past self",
+  "play": "Play",
+  "levels": "Levels",
+  "settings": "Settings",
+  "levelLabel": "Level {number}",
+  "@levelLabel": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "turnsLabel": "Turns",
+  "echoesLabel": "Echoes",
+  "undo": "Undo",
+  "newLoop": "New loop",
+  "restart": "Restart",
+  "wait": "Wait",
+  "levelComplete": "Loop closed",
+  "nextLevel": "Next",
+  "cloneLimitReached": "Out of echoes — level reset",
+  "loopExhausted": "Turns are up — start a new loop",
+  "outOfEchoes": "Out of turns and echoes — restart the level",
+  "colorBlindMode": "Colour-blind symbols",
+  "language": "Language",
+  "locked": "Locked",
+  "echoesUsed": "{count} echoes",
+  "@echoesUsed": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "perfect": "Best possible",
+  "sound": "Sound",
+  "introSkip": "Skip",
+  "introNext": "Next",
+  "introStart": "Begin",
+  "introTitle1": "Your turns are counted",
+  "introBody1": "Every move spends one turn. When they run out, the loop closes.",
+  "introTitle2": "Your moves come back",
+  "introBody2": "The closed loop replays everything you did, as an echo. You start over, fresh.",
+  "introTitle3": "Leave your past behind",
+  "introBody3": "An echo standing on a plate holds the gate open — long enough for you to walk through."
+}
