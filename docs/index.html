@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Döngü — Zaman Yankısı Bulmacası</title>
+<meta name="description" content="Geçmiş kendinle iş birliği yaptığın tur tabanlı bir bulmaca oyunu. 23 seviye, çevrimdışı, sıfır izin, reklamsız.">
+<link rel="stylesheet" href="fonts.css">
+<style>
+  /* Oyunun kendi gece dunyasina bilerek bagli kaliyor: tek tema, her renk
+     acikca boyanmis. */
+  :root {
+    --ground: #070B18;
+    --ground-deep: #04070F;
+    --surface: #101932;
+    --floor: #141E37;
+    --edge: #1F2E52;
+    --ink: #E6ECFF;
+    --ink-soft: #8494BE;
+    --ghost: #7FB6FF;
+    --player: #FFF1D2;
+    --glow: #FFC862;
+    --exit: #4DE0C0;
+    --amber: #FFB454;
+    --violet: #A88BFF;
+    --cell: clamp(30px, 8.2vw, 54px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { color-scheme: dark; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 54rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 8vw, 5rem);
+  }
+
+  a { color: var(--ghost); }
+  a:focus-visible { outline: 2px solid var(--ghost); outline-offset: 3px; border-radius: 4px; }
+
+  /* ---- ust bar ---- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: .7rem; }
+  .brand svg { width: 34px; height: 34px; }
+  .brand b {
+    font-family: Sora, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600; font-size: .95rem; letter-spacing: .24em; text-transform: uppercase;
+  }
+  .topbar nav { display: flex; gap: 1.25rem; font-size: .9rem; }
+  .topbar nav a { color: var(--ink-soft); text-decoration: none; }
+  .topbar nav a:hover { color: var(--ink); }
+
+  /* ---- kahraman ---- */
+  .hero { display: flex; flex-direction: column; align-items: center; gap: 1.6rem; text-align: center; }
+  h1 {
+    font-family: Sora, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 6.5vw, 3.1rem);
+    line-height: 1.1; letter-spacing: -.025em; text-wrap: balance;
+    margin: 0; max-width: 16ch;
+  }
+  .lede { color: var(--ink-soft); max-width: 46ch; margin: 0; text-wrap: pretty; }
+
+  /* ---- canli gosterim ---- */
+  .demo { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(9, var(--cell));
+    grid-template-rows: repeat(3, var(--cell));
+  }
+  .cell { width: var(--cell); height: var(--cell); padding: 4%; }
+  .cell > i {
+    display: block; width: 100%; height: 100%;
+    border-radius: 16%;
+    background: var(--floor);
+    border: 1px solid var(--edge);
+  }
+  .cell.wall > i { background: none; border: none; }
+
+  .cell.plate > i {
+    background: color-mix(in srgb, var(--amber) 12%, var(--floor));
+  }
+  .cell.plate > i::after {
+    content: ""; display: block; width: 38%; height: 38%; margin: 31% auto;
+    border: 2px solid var(--amber); border-radius: 50%;
+  }
+  .cell.gate > i {
+    background: var(--amber); border-color: var(--amber);
+    transition: background .3s ease, border-color .3s ease;
+  }
+  .board.open .cell.gate > i { background: transparent; border-color: color-mix(in srgb, var(--amber) 40%, transparent); }
+  .cell.exit > i::after {
+    content: ""; display: block; width: 44%; height: 44%; margin: 28% auto;
+    border: 2px solid var(--exit); border-radius: 50%;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--exit) 18%, transparent);
+  }
+
+  .pawn {
+    position: absolute; top: 0; left: 0; z-index: 2;
+    width: var(--cell); height: var(--cell);
+    display: grid; place-items: center;
+    transition: transform .26s cubic-bezier(.3, .8, .3, 1);
+    pointer-events: none;
+  }
+  .pawn.snap { transition: none; }
+  .pawn > span { display: block; border-radius: 50%; }
+  .pawn.player > span {
+    width: 54%; height: 54%;
+    background: var(--player);
+    box-shadow: 0 0 calc(var(--cell) * .5) color-mix(in srgb, var(--glow) 60%, transparent);
+  }
+  .pawn.echo > span {
+    width: 50%; height: 50%;
+    border: 2px solid var(--ghost);
+    background: color-mix(in srgb, var(--ghost) 16%, transparent);
+  }
+  .pawn.hidden { opacity: 0; }
+
+  .caption {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .78rem; letter-spacing: .06em; color: var(--ink-soft);
+    min-height: 1.4em; margin: 0; text-align: center;
+  }
+  .caption b { color: var(--ghost); font-weight: 500; }
+
+  /* ---- gercekler seridi ---- */
+  .facts {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem .75rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .78rem;
+  }
+  .facts span {
+    border: 1px solid var(--edge); border-radius: 999px;
+    padding: .32rem .85rem; color: var(--ink-soft);
+  }
+  .facts span.on { color: var(--exit); border-color: color-mix(in srgb, var(--exit) 35%, transparent); }
+
+  /* ---- bolumler ---- */
+  section { display: flex; flex-direction: column; gap: 1.5rem; }
+  h2 {
+    font-family: Sora, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600; font-size: 1.4rem; letter-spacing: -.015em; margin: 0;
+    text-wrap: balance;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--ink-soft); margin: 0 0 -.9rem;
+  }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+  .card {
+    background: var(--surface); border: 1px solid var(--edge); border-radius: 14px;
+    padding: 1.15rem 1.25rem 1.35rem;
+    display: flex; flex-direction: column; gap: .7rem;
+  }
+  .card h3 {
+    font-family: Sora, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600; font-size: 1rem; margin: 0;
+  }
+  .card p { margin: 0; color: var(--ink-soft); font-size: .93rem; }
+  .strip { display: flex; gap: 2px; --cell: 34px; }
+
+  .cell.heavy > i { background: color-mix(in srgb, var(--amber) 16%, var(--floor)); }
+  .cell.heavy > i::after {
+    content: ""; display: block; width: 34%; height: 34%; margin: 33% auto;
+    border: 2px solid var(--amber); border-radius: 50%;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 45%, transparent);
+  }
+  .cell.crate > i::after {
+    content: ""; display: block; width: 56%; height: 56%; margin: 22% auto;
+    border: 2px solid #C08E57; border-radius: 20%;
+    background: color-mix(in srgb, #C08E57 20%, transparent);
+  }
+  .cell.crack > i {
+    background: color-mix(in srgb, var(--violet) 10%, var(--floor));
+    border-style: dashed; border-color: color-mix(in srgb, var(--violet) 45%, transparent);
+  }
+  .cell.pit > i { background: var(--ground-deep); border-color: color-mix(in srgb, var(--violet) 20%, transparent); }
+  .cell.fade > i { background: transparent; border: 2px solid #6FE3FF; }
+
+  /* ---- ekran goruntuleri ---- */
+  .shots { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: .6rem; }
+  .shot { flex: none; width: 190px; display: flex; flex-direction: column; gap: .55rem; }
+  .shot img {
+    width: 100%; height: auto; display: block;
+    border-radius: 12px; border: 1px solid var(--edge);
+  }
+  .shot span { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .72rem; color: var(--ink-soft); }
+
+  /* ---- alt ---- */
+  .en { color: var(--ink-soft); }
+  .en h2 { color: var(--ink); }
+  footer {
+    border-top: 1px solid var(--edge); padding-top: 1.5rem;
+    display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; align-items: center;
+    font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .78rem;
+    color: var(--ink-soft);
+  }
+  footer a { text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .soon { color: var(--amber); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pawn { transition: none; }
+    .cell.gate > i { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 108 108" aria-hidden="true">
+        <path d="M30,54 C30,42 42,42 54,54 C66,66 78,66 78,54 C78,42 66,42 54,54 C42,66 30,66 30,54 Z"
+              fill="none" stroke="var(--ghost)" stroke-width="7"
+              stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <b>Döngü</b>
+    </div>
+    <nav>
+      <a href="https://github.com/tombikdoner10/dongu">Kaynak kod</a>
+      <a href="gizlilik.html">Gizlilik</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <h1>Geçmiş kendinle iş birliği yap</h1>
+    <p class="lede">Turların sayılı. Turlar bitince döngü kapanır ve yaptığın
+      her hamle bir <b>yankı</b> olarak yeniden oynanır — sen ise baştan
+      başlarsın.</p>
+
+    <div class="demo">
+      <div class="board" id="board" role="img"
+           aria-label="Seviye 2'nin canlandırması: oyuncu plakaya yürüyor, döngü kapanıyor, yankısı plakayı basılı tutarken oyuncu açılan kapıdan çıkışa gidiyor.">
+        <div class="pawn echo hidden" id="echo"><span></span></div>
+        <div class="pawn player" id="player"><span></span></div>
+      </div>
+      <p class="caption" id="caption"></p>
+    </div>
+
+    <div class="facts">
+      <span>23 seviye</span>
+      <span class="on">sıfır izin</span>
+      <span>çevrimdışı</span>
+      <span>reklamsız</span>
+      <span>Türkçe / English</span>
+    </div>
+  </header>
+
+  <section>
+    <p class="eyebrow">Nasıl oynanır</p>
+    <h2>Tek kural: plakadan çekilirsen kapı kapanır</h2>
+    <div class="cards">
+
+      <div class="card">
+        <div class="strip">
+          <div class="cell plate"><i></i></div>
+          <div class="cell"><i></i></div>
+          <div class="cell gate"><i></i></div>
+        </div>
+        <h3>Plaka ve kapı</h3>
+        <p>Kapıyı açık tutmak için plakanın üstünde biri durmalı. Sen gidersen
+          kapanır — bu yüzden oraya geçmişini bırakırsın.</p>
+      </div>
+
+      <div class="card">
+        <div class="strip">
+          <div class="cell crate"><i></i></div>
+          <div class="cell heavy"><i></i></div>
+          <div class="cell"><i></i></div>
+        </div>
+        <h3>Sandık ve ağır plaka</h3>
+        <p>Sandık plakayı hiç çekilmeden basılı tutar. Ağır plaka ise iki beden
+          ister: iki yankını aynı kareye yığman gerekir.</p>
+      </div>
+
+      <div class="card">
+        <div class="strip">
+          <div class="cell pit"><i></i></div>
+          <div class="cell crack"><i></i></div>
+          <div class="cell fade"><i></i></div>
+        </div>
+        <h3>Çatlak zemin ve solan kapı</h3>
+        <p>Çatlak zemin üstünden çekilince çöker. Solan kapı yalnızca döngünün
+          ilk turlarında açıktır. Yankın köprüyü senden önce yakabilir.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Oyundan</p>
+    <h2>23 elle tasarlanmış seviye</h2>
+    <div class="shots">
+      <div class="shot"><img src="screenshots/01-ana-ekran.png" alt="Döngü ana ekranı" loading="lazy" width="480" height="1067"><span>Ana ekran</span></div>
+      <div class="shot"><img src="screenshots/02-seviyeler.png" alt="Seviye listesi" loading="lazy" width="480" height="1067"><span>Seviye listesi</span></div>
+      <div class="shot"><img src="screenshots/03-yankilar.png" alt="İki yankı ve üç renkli kapı" loading="lazy" width="480" height="1067"><span>İki yankı, üç kapı</span></div>
+      <div class="shot"><img src="screenshots/04-mekanikler.png" alt="Çatlak zemin, ağır plaka ve solan kapı" loading="lazy" width="480" height="1067"><span>Üç mekanik bir arada</span></div>
+      <div class="shot"><img src="screenshots/05-kazanma.png" alt="Döngü kapandı ekranı" loading="lazy" width="480" height="1067"><span>Döngü kapandı</span></div>
+    </div>
+  </section>
+
+  <section class="en">
+    <p class="eyebrow">English</p>
+    <h2>Cooperate with your past self</h2>
+    <p>Your turns are counted. When they run out the loop closes — and every
+      move you made is replayed as an echo, while you start over. Nobody to
+      stand on the plate that holds the gate open? Leave your past self there,
+      one loop earlier.</p>
+    <p>23 hand-built levels. Turn-based, no timers. Fully offline, no
+      permissions, no ads, no data collection. Turkish and English.</p>
+  </section>
+
+  <footer>
+    <span class="soon">Yakında Google Play'de</span>
+    <a href="https://github.com/tombikdoner10/dongu">GitHub</a>
+    <a href="gizlilik.html">Gizlilik politikası</a>
+    <span>com.egeayvaz.dongu</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Seviye 2'nin haritasi, dis duvar halkasi kirpilmis hali (9x3).
+  var MAP = [
+    ".1...####",
+    ".....A..E",
+    ".....####"
+  ];
+
+  var board = document.getElementById("board");
+  var player = document.getElementById("player");
+  var echo = document.getElementById("echo");
+  var caption = document.getElementById("caption");
+
+  // Kareleri kur.
+  for (var y = 0; y < MAP.length; y++) {
+    for (var x = 0; x < MAP[y].length; x++) {
+      var ch = MAP[y][x];
+      var cell = document.createElement("div");
+      cell.className = "cell"
+        + (ch === "#" ? " wall" : "")
+        + (ch === "1" ? " plate" : "")
+        + (ch === "A" ? " gate" : "")
+        + (ch === "E" ? " exit" : "");
+      cell.appendChild(document.createElement("i"));
+      board.appendChild(cell);
+    }
+  }
+
+  // Cozucunun dogruladigi cozum: 1. dongu L,L — 2. dongu D,R,R,R,R,R.
+  var PLATE_X = 1, PLATE_Y = 0;
+  var FRAMES = [
+    { p: [3, 0], e: null, hold: 900,  text: "<b>1. döngü</b> — plakaya git" },
+    { p: [2, 0], e: null },
+    { p: [1, 0], e: null, hold: 1000, text: "<b>1. döngü</b> — plaka basılı, kapı açık" },
+    { p: [1, 0], e: null, hold: 1200, text: "turlar bitti — döngü kapanıyor" },
+    { p: [3, 0], e: [3, 0], snap: true, hold: 900, text: "<b>2. döngü</b> — yankın az önceki yolunu tekrar ediyor" },
+    { p: [3, 1], e: [2, 0] },
+    { p: [4, 1], e: [1, 0], hold: 900, text: "yankı plakada — kapı senin için açık" },
+    { p: [5, 1], e: [1, 0] },
+    { p: [6, 1], e: [1, 0] },
+    { p: [7, 1], e: [1, 0] },
+    { p: [8, 1], e: [1, 0], hold: 1600, text: "çıkış — döngü kapandı" }
+  ];
+
+  function place(pawn, pos, snap) {
+    if (!pos) { pawn.classList.add("hidden"); return; }
+    pawn.classList.remove("hidden");
+    if (snap) { pawn.classList.add("snap"); }
+    pawn.style.transform =
+      "translate(calc(var(--cell) * " + pos[0] + "), calc(var(--cell) * " + pos[1] + "))";
+    if (snap) {
+      void pawn.offsetWidth;          // aktarimi sifirlamak icin yeniden akis
+      pawn.classList.remove("snap");
+    }
+  }
+
+  function render(frame, snap) {
+    place(player, frame.p, snap);
+    place(echo, frame.e, snap);
+    var onPlate =
+      (frame.p[0] === PLATE_X && frame.p[1] === PLATE_Y) ||
+      (frame.e && frame.e[0] === PLATE_X && frame.e[1] === PLATE_Y);
+    board.classList.toggle("open", !!onPlate);
+    if (frame.text) { caption.innerHTML = frame.text; }
+  }
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (reduced.matches) {
+    // Hareket istenmiyorsa fikri anlatan tek kareyi goster.
+    render(FRAMES[6], true);
+    return;
+  }
+
+  var index = 0;
+  (function tick() {
+    var frame = FRAMES[index];
+    render(frame, frame.snap);
+    index = (index + 1) % FRAMES.length;
+    setTimeout(tick, frame.hold || 640);
+  })();
+})();
+</script>
+
+</body>
+</html>

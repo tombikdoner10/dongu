@@ -90,7 +90,10 @@ def download_fonts() -> str:
         )
 
     write_font_notice()
-    return "\n".join(rules)
+    css_rules = "\n".join(rules)
+    # Ayni kurallari tanitim sayfasi da kullanir; ortak dosyaya da yazilir.
+    (DOCS / "fonts.css").write_text(css_rules + "\n", encoding="utf-8")
+    return css_rules
 
 
 def write_font_notice() -> None:
