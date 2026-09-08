@@ -54,6 +54,60 @@ void main() {
         expect(solution.longestLoop, lessThanOrEqualTo(level.maxTurns));
       });
 
+      test('her kapinin plakasi, her plakanin kapisi var', () {
+        // "1 2 3" ile "4 5 6" ayni gruplarin hafif/agir bicimleridir; kolayca
+        // karistirilir. Plakasiz bir kapi seviyeyi cozulemez yapar, kapisiz bir
+        // plaka ise oyuncuyu bosuna oyalar.
+        final plateGroups = <int>{};
+        final doorGroups = <int>{};
+        for (final row in level.grid) {
+          for (final tile in row) {
+            if (tile.isPlate) {
+              plateGroups.add(tile.group);
+            } else if (tile.type == TileType.door) {
+              doorGroups.add(tile.group);
+            }
+          }
+        }
+        expect(doorGroups.difference(plateGroups), isEmpty,
+            reason: 'seviye ${level.id}: plakasi olmayan kapi grubu var');
+        expect(plateGroups.difference(doorGroups), isEmpty,
+            reason: 'seviye ${level.id}: kapisi olmayan plaka grubu var');
+      });
+
+      test('plaka kendi kapisinin bitisiginde degil', () {
+        // Kapi durumu turun BASINDA sabitlenir: plakanin uzerindeki beden,
+        // hemen bitisikteki kendi kapisindan gecebilir (hamle degerlendirilirken
+        // hala plakadadir). Bu, kapiyi bedavaya cevirir ve seviyeyi tasarlanandan
+        // kolay yapar. Iki kez bu tuzaga dusuldugu icin artik testle yakalaniyor.
+        for (var y = 0; y < level.rows; y++) {
+          for (var x = 0; x < level.cols; x++) {
+            final tile = level.grid[y][x];
+            if (!tile.isPlate) {
+              continue;
+            }
+            for (final step in <Pos>[
+              Pos(x + 1, y),
+              Pos(x - 1, y),
+              Pos(x, y + 1),
+              Pos(x, y - 1),
+            ]) {
+              if (!level.inBounds(step)) {
+                continue;
+              }
+              final neighbour = level.tileAt(step);
+              expect(
+                neighbour.type == TileType.door &&
+                    neighbour.group == tile.group,
+                isFalse,
+                reason: 'seviye ${level.id}: ($x,$y) plakasi kendi kapisinin '
+                    'bitisiginde — plakadaki beden kapidan sizabilir',
+              );
+            }
+          }
+        }
+      });
+
       test('ogretici disindaki seviyeler yanki gerektiriyor', () {
         // par == 0 demek "duz yuruyerek gecilir" demek; bu yalnizca giris
         // seviyesinde kabul edilebilir.

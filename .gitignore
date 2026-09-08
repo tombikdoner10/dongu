@@ -46,3 +46,6 @@ app.*.map.json
 
 # Python (dev betikleri)
 __pycache__/
+
+# Serena MCP calisma dosyalari
+.serena/
