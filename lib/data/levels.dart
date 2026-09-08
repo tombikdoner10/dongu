@@ -1035,9 +1035,9 @@ final List<Level> kLevels = <Level>[
     maxClones: 0,
     map: '''
 #########
-#.......#
+#.....###
 #.P.7.AE#
-#.......#
+#.....###
 #########
 ''',
   ),
@@ -1614,8 +1614,8 @@ final List<Level> kLevels = <Level>[
 #.....P.....#
 #.8#######..#
 #.A.........#
-#.B##########
-#.E##########
+##B##########
+##E##########
 #############
 ''',
   ),
@@ -1695,6 +1695,429 @@ final List<Level> kLevels = <Level>[
 #####B#####
 #####E#####
 ###########
+''',
+  ),
+  Level.parse(
+    id: 80,
+    par: 1,
+    titleTr: 'Geniş Oda',
+    titleEn: 'The Wide Room',
+    hintTr: 'Koridor yok, tek bir oda var. Çıkış odanın göbeğinde kilitli.',
+    hintEn: 'No corridors here, just one room — with the exit locked in its '
+        'heart.',
+    maxTurns: 13,
+    maxClones: 1,
+    map: '''
+#############
+#...........#
+#...........#
+#....###....#
+#....#E#....#
+#....#B#....#
+#....#A#....#
+#.1......8..#
+#.....P.....#
+#############
+''',
+  ),
+  Level.parse(
+    id: 81,
+    par: 1,
+    titleTr: 'Sola Doğru',
+    titleEn: 'Leftward',
+    hintTr: 'Çıkış solda. Yolun üstündeki iki kapı da açılmalı.',
+    hintEn: 'The exit lies west. Both gates on the way must give.',
+    maxTurns: 14,
+    maxClones: 1,
+    map: '''
+#############
+#########.1.#
+#E.B...A....#
+#########.8.#
+#########P..#
+#############
+''',
+  ),
+  Level.parse(
+    id: 82,
+    par: 1,
+    titleTr: 'T Kolu',
+    titleEn: 'The T',
+    hintTr: 'Düğme bir yanda, plaka diğer yanda. Çıkış tam ortadan yukarı.',
+    hintEn: 'Switch on one side, plate on the other. The exit runs straight '
+        'up the middle.',
+    maxTurns: 11,
+    maxClones: 1,
+    map: '''
+#############
+######E######
+######B######
+######A######
+#..8..P..1..#
+#############
+''',
+  ),
+  Level.parse(
+    id: 83,
+    par: 0,
+    titleTr: 'Yılan',
+    titleEn: 'Serpentine',
+    hintTr: 'Yol katlanarak geri geliyor. Düğme en uzak noktada.',
+    hintEn: 'The path folds back on itself, and the switch sits at the far '
+        'end.',
+    maxTurns: 19,
+    maxClones: 0,
+    map: '''
+#########
+#P.....7#
+#######.#
+#A......#
+#.#######
+#E#######
+#########
+''',
+  ),
+  Level.parse(
+    id: 84,
+    par: 1,
+    titleTr: 'İkiz Oda',
+    titleEn: 'Twin Rooms',
+    hintTr: 'İki odayı tek bir kapı ayırıyor. Onu açık tutacak biri lazım.',
+    hintEn: 'A single gate divides the two rooms, and it needs somebody to '
+        'hold it.',
+    maxTurns: 12,
+    maxClones: 1,
+    map: '''
+#############
+#.....#.....#
+#.1...A...E.#
+#.....#.....#
+#..P..#.....#
+#############
+''',
+  ),
+  Level.parse(
+    id: 85,
+    par: 2,
+    titleTr: 'Merkez',
+    titleEn: 'The Middle',
+    hintTr: 'Ortadan başlıyorsun. Plakalar iki farklı kolda.',
+    hintEn: 'You start at the centre. The plates lie down separate arms.',
+    maxTurns: 7,
+    maxClones: 2,
+    map: '''
+###########
+#####E#####
+#####B#####
+#####A#####
+#..1.P....#
+#####.#####
+#####2#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 86,
+    par: 1,
+    titleTr: 'Halka',
+    titleEn: 'The Ring',
+    hintTr: 'İki düğme halkanın iki ucunda. Bir turda ikisine birden '
+        'yetişemezsin.',
+    hintEn: 'Two switches sit at opposite ends of the ring, and one loop is '
+        'not enough for both.',
+    maxTurns: 12,
+    maxClones: 1,
+    map: '''
+#########
+#...P...#
+#.#####.#
+#7##E##8#
+#.##A##.#
+#...B...#
+#########
+''',
+  ),
+  Level.parse(
+    id: 87,
+    par: 1,
+    titleTr: 'Aynı Adım',
+    titleEn: 'In Step',
+    hintTr: 'Düğmeye yankınla aynı anda basarsan düğme yalnızca bir kez '
+        'döner.',
+    hintEn: 'Step onto the switch at the same moment as your echo and it '
+        'turns only once.',
+    maxTurns: 8,
+    maxClones: 1,
+    map: '''
+#########
+#P..7.8##
+####A####
+####B####
+####E####
+#########
+''',
+  ),
+  Level.parse(
+    id: 88,
+    par: 2,
+    titleTr: 'Dört Oda',
+    titleEn: 'Four Rooms',
+    hintTr: 'Ağır plaka alt odada, düğme karşı odada. Sıra önemli.',
+    hintEn: 'The heavy plate is downstairs, the switch is across the hall, '
+        'and the order matters.',
+    maxTurns: 13,
+    maxClones: 2,
+    map: '''
+#############
+#.....#.....#
+#..P..A..8..#
+#.....#.....#
+###.#####B###
+#.....#.....#
+#..4..#..E..#
+#.....#.....#
+#############
+''',
+  ),
+  Level.parse(
+    id: 89,
+    par: 1,
+    titleTr: 'Tek Sayı',
+    titleEn: 'Odd Count',
+    hintTr: 'Aynı kapıya iki düğme. Kapı ancak tek sayıda basıştan sonra '
+        'açık kalır.',
+    hintEn: 'Two switches, one gate: it stays open only after an odd number '
+        'of presses.',
+    maxTurns: 10,
+    maxClones: 1,
+    map: '''
+########
+#P###AE#
+#.###.##
+#7...7##
+########
+''',
+  ),
+  Level.parse(
+    id: 90,
+    par: 2,
+    titleTr: 'İki Yaka',
+    titleEn: 'Two Shores',
+    hintTr: 'Işınlanma kapısı seni karşıya atar, plakalar bu yakada kalır.',
+    hintEn: 'The portal throws you across, but the plates stay on this shore.',
+    maxTurns: 8,
+    maxClones: 2,
+    map: '''
+#############
+#.....#.....#
+#1.(.2#..)..#
+#..P..#..A..#
+#.....###B###
+#########E###
+#############
+''',
+  ),
+  Level.parse(
+    id: 91,
+    par: 1,
+    titleTr: 'Feda',
+    titleEn: 'The Sacrifice',
+    hintTr: 'Düğmeye giden köprü tek geçişlik. Giden geri dönemez.',
+    hintEn: 'The bridge to the switch holds for one crossing; whoever goes '
+        'does not come back.',
+    maxTurns: 9,
+    maxClones: 1,
+    map: '''
+###########
+#....#....#
+#.P..A..E.#
+#....#....#
+###~#######
+###7#######
+###########
+''',
+  ),
+  Level.parse(
+    id: 92,
+    par: 1,
+    titleTr: 'Tek Yön',
+    titleEn: 'One Way',
+    hintTr: 'İki kol da tek yönlü. Bir beden ancak birini seçebilir.',
+    hintEn: 'Both branches are one-way, so a single body can only pick one.',
+    maxTurns: 9,
+    maxClones: 1,
+    map: '''
+###########
+#....P....#
+#.........#
+##v#####v##
+##7#####A##
+########E##
+###########
+''',
+  ),
+  Level.parse(
+    id: 93,
+    par: 1,
+    titleTr: 'Sarmal',
+    titleEn: 'Spiral',
+    hintTr: 'Yol merkeze kadar sarılıyor. Plakayı en baştaki geçitte bırak.',
+    hintEn: 'The path winds all the way to the centre, so leave the plate '
+        'held back at the start.',
+    maxTurns: 17,
+    maxClones: 1,
+    map: '''
+#######
+#P.1..#
+#####.#
+#.AE#.#
+#.###.#
+#.....#
+#######
+''',
+  ),
+  Level.parse(
+    id: 94,
+    par: 1,
+    titleTr: 'Buz Odası',
+    titleEn: 'The Ice Room',
+    hintTr: 'Buzda duramazsın; ancak buz olmayan bir kare seni durdurur.',
+    hintEn: 'You cannot stop on ice — only a tile that is not ice will halt '
+        'you.',
+    maxTurns: 5,
+    maxClones: 1,
+    map: '''
+#########
+#*******#
+#P*****7#
+#******A#
+#2****#B#
+#*****#E#
+#########
+''',
+  ),
+  Level.parse(
+    id: 95,
+    par: 1,
+    titleTr: 'Uzak Sandık',
+    titleEn: 'The Far Crate',
+    hintTr: 'Sandığı plakaya itmek uzun sürer. Çıkış ise ters yönde.',
+    hintEn: 'Shoving the crate onto the plate takes a while, and the exit is '
+        'the other way.',
+    maxTurns: 6,
+    maxClones: 1,
+    map: '''
+###########
+##.......##
+#EA..P.X.1#
+##.......##
+###########
+''',
+  ),
+  Level.parse(
+    id: 96,
+    par: 2,
+    titleTr: 'Üç Kapı',
+    titleEn: 'Three Gates',
+    hintTr: 'Üç kapı arka arkaya. Ağır plaka iki beden ister, düğmeler '
+        'sana kalıyor.',
+    hintEn: 'Three gates in a row: the heavy plate wants two bodies, so both '
+        'switches are yours to press.',
+    maxTurns: 18,
+    maxClones: 2,
+    map: '''
+#############
+####7#8######
+####.#.######
+#P......ABCE#
+##.##########
+##6##########
+#############
+''',
+  ),
+  Level.parse(
+    id: 97,
+    par: 2,
+    titleTr: 'Kule',
+    titleEn: 'The Tower',
+    hintTr: 'Merdivenler tek yönlü: çıkan geri inemez. Her kat kendi '
+        'plakasını basılı ister.',
+    hintEn: 'The ladders only lead up, and each floor wants its own plate '
+        'held down.',
+    maxTurns: 15,
+    maxClones: 2,
+    map: '''
+#########
+######E##
+######B##
+######^##
+#.2.....#
+#A#######
+#^#######
+#..1P...#
+#########
+''',
+  ),
+  Level.parse(
+    id: 98,
+    par: 2,
+    titleTr: 'Üç Ada',
+    titleEn: 'Three Islands',
+    hintTr: 'Işınlanma kapıları zinciri üç adayı bağlıyor; plakalar geride '
+        'kalıyor.',
+    hintEn: 'A chain of portals links the three islands, and the plates stay '
+        'behind you.',
+    maxTurns: 10,
+    maxClones: 2,
+    map: '''
+#############
+#.1.#.2.##E##
+#...#...##A##
+#.P.#.[.##B##
+#.(.#.).#.].#
+#...#...#...#
+#############
+''',
+  ),
+  Level.parse(
+    id: 99,
+    par: 2,
+    titleTr: 'Geri Sayım',
+    titleEn: 'Countdown',
+    hintTr: 'Solan kapı dört tur sonra kapanır. Yankıların ilk adımda '
+        'plakalarda olmalı.',
+    hintEn: 'The fading gate shuts after four turns, so your echoes must be '
+        'on the plates from their very first step.',
+    maxTurns: 5,
+    maxClones: 2,
+    fadeTurns: 4,
+    map: '''
+#########
+#..1#####
+#..PABTE#
+#..2#####
+#########
+''',
+  ),
+  Level.parse(
+    id: 100,
+    par: 2,
+    titleTr: 'Döngü',
+    titleEn: 'The Loop',
+    hintTr: 'Son döngü. İki yankını ağır plakaya bırak, düğmeyi kendin '
+        'çevir.',
+    hintEn: 'The last loop: leave both echoes on the heavy plate and turn '
+        'the switch yourself.',
+    maxTurns: 7,
+    maxClones: 2,
+    map: '''
+#######
+#P.7###
+#.#.###
+#5.AB.#
+###BEB#
+###.B.#
+#######
 ''',
   ),
 ];

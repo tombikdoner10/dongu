@@ -6,7 +6,11 @@ import 'models.dart';
 ///   "#" duvar, "." zemin, "P" baslangic, "E" cikis, "X" sandik
 ///   "1 2 3" plaka, "4 5 6" agir plaka (iki beden ister),
 ///   "7 8 9" dugme (basilinca kalici acar/kapatir)
-///   "A B C" kapi (1-A, 2-B, 3-C), "T" solan kapi
+///   "A B C" kapi, "T" solan kapi
+///
+/// Grup eslesmesi sutun sutundur: 1/4/7 -> A, 2/5/8 -> B, 3/6/9 -> C. Yani
+/// plaka "1" ile dugme "7" ayni kapiyi surer; iki farkli kapi isteniyorsa
+/// saglayicilar da farkli sutundan secilmelidir.
 ///   "~" kirilgan zemin, "*" buz
 ///   "^ v < >" tek yonlu gecit (yalnizca o yonde girilir)
 ///   "( )" ve "[ ]" isinlanma cifti

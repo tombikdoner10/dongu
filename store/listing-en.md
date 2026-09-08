@@ -9,7 +9,7 @@ Döngü
 ## Short description (max 80 characters)
 
 ```
-Cooperate with your past self. 45 time-loop puzzles.
+Cooperate with your past self. 100 time-loop puzzles.
 ```
 
 ## Full description (max 4000 characters)
@@ -23,7 +23,7 @@ Döngü is a puzzle game about cooperating with your own past. No reflexes, no t
 
 WHAT IS INSIDE
 
-• 45 hand-built levels on a curve from gentle to genuinely hard
+• 100 hand-built levels on a curve from gentle to genuinely hard
 • Plates and coloured gates: somebody must stand on it, or the gate closes
 • Pushable crates: they hold a plate down and never step off
 • Heavy plates: they need two bodies, so stack two echoes on one tile

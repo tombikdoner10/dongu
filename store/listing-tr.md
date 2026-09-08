@@ -9,7 +9,7 @@ Döngü
 ## Kısa açıklama (en fazla 80 karakter)
 
 ```
-Geçmiş kendinle iş birliği yap. 45 zaman döngüsü bulmacası.
+Geçmiş kendinle iş birliği yap. 100 zaman döngüsü bulmacası.
 ```
 
 ## Tam açıklama (en fazla 4000 karakter)
@@ -23,7 +23,7 @@ Döngü, geçmiş kendinle iş birliği yaptığın bir bulmaca oyunu. Refleks i
 
 NELER VAR
 
-• 45 elle tasarlanmış seviye, kolaydan gerçekten zora uzanan bir eğri
+• 100 elle tasarlanmış seviye, kolaydan gerçekten zora uzanan bir eğri
 • Plakalar ve renkli kapılar: biri üstünde durmalı, yoksa kapı kapanır
 • İtilebilir sandıklar: plakayı hiç çekilmeden basılı tutarlar
 • Ağır plakalar: açılmaları için iki beden ister, iki yankını aynı kareye yığ

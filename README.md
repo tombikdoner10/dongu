@@ -38,7 +38,7 @@ lib/
     level.dart       ASCII harita çözümleyici
     game_state.dart  tur çözümleme, kapı mantığı, geri alma
     solver.dart      otomatik çözücü (aşağıya bakın)
-  data/levels.dart   45 seviye, ASCII veri olarak
+  data/levels.dart   100 seviye, ASCII veri olarak
   services/          ilerleme kaydı, ses
   ui/                ekranlar ve tahta çizimi
 ```
@@ -100,7 +100,7 @@ adayları tur bazında da ayırır. Bayrak unutulursa hata gürültülüdür: ra
 | Betik | İş |
 |---|---|
 | `dev/check.ps1` | analiz + testler, kırpılmış özet |
-| `dev/level_report.dart` | 45 seviyenin par değeri, süresi, doğrulaması |
+| `dev/level_report.dart` | 100 seviyenin par değeri, süresi, doğrulaması |
 | `dev/solution_dump.dart` | tek seviyenin çözümü, hamle hamle |
 | `dev/solution_export.dart` | çözümleri makine okunur biçimde dışa aktarır |
 | `dev/play_all.py` | bütün seviyeleri emülatörde gerçek dokunuşlarla oynar |

@@ -144,6 +144,6 @@ Play'e her yeni yüklemede **`+` sonrası sayı artmak zorunda**.
 
 ```bash
 pwsh dev/check.ps1                      # analiz + 343 test
-dart run dev/level_report.dart          # 45 seviyenin tamamı çözülebilir mi
+dart run dev/level_report.dart          # 100 seviyenin tamamı çözülebilir mi
 flutter build appbundle --release       # yükleme paketi
 ```

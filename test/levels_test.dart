@@ -19,6 +19,49 @@ GameState _play(Level level, List<List<GameAction>> loops) {
   return state;
 }
 
+/// Butun kapilar kapaliyken cikisa ulasilabiliyor mu?
+///
+/// Tek yonlu gecitler yon kuralina, isinlanma kapilari eslerine gore
+/// izlenir; buz ve kirilgan zemin sade zemin sayilir (bu tarafta cömert
+/// olmak, "kapi dekoratif" uyarisini yalnizca gercekten oyle oldugunda
+/// verir demektir).
+bool _exitReachableWithGatesShut(Level level) {
+  bool open(Pos p, GameAction direction) {
+    if (!level.inBounds(p)) {
+      return false;
+    }
+    final tile = level.tileAt(p);
+    return switch (tile.type) {
+      TileType.wall || TileType.door || TileType.fadingDoor => false,
+      TileType.oneWay => tile.oneWayDirection == direction,
+      _ => true,
+    };
+  }
+
+  final seen = <Pos>{level.spawn};
+  final queue = <Pos>[level.spawn];
+  while (queue.isNotEmpty) {
+    final here = queue.removeLast();
+    if (here == level.exit) {
+      return true;
+    }
+    for (final direction in GameAction.values) {
+      if (!direction.isMove) {
+        continue;
+      }
+      var next = here.moved(direction);
+      if (!open(next, direction)) {
+        continue;
+      }
+      next = level.teleportPartners[next] ?? next;
+      if (seen.add(next)) {
+        queue.add(next);
+      }
+    }
+  }
+  return false;
+}
+
 void main() {
   test('seviye kimlikleri 1..n, sirali ve benzersiz', () {
     expect(
@@ -74,6 +117,20 @@ void main() {
             reason: 'seviye ${level.id}: plakasi/dugmesi olmayan kapi grubu var');
         expect(providerGroups.difference(doorGroups), isEmpty,
             reason: 'seviye ${level.id}: kapisi olmayan plaka/dugme grubu var');
+      });
+
+      test('kapilar gercekten yolu kesiyor', () {
+        // Butun kapilar kapali sayilarak cikisa varilabiliyorsa kapilar
+        // dekoratiftir: oyuncu yanlarindan dolasabiliyor demektir. Bu hata
+        // uc seviyede tekrarlandigi icin artik testle yakalaniyor.
+        final hasGate = level.grid.any((List<Tile> row) => row.any((Tile t) =>
+            t.type == TileType.door || t.type == TileType.fadingDoor));
+        if (!hasGate) {
+          return;
+        }
+        expect(_exitReachableWithGatesShut(level), isFalse,
+            reason: 'seviye ${level.id}: cikisa hicbir kapidan gecmeden '
+                'ulasilabiliyor');
       });
 
       test('plaka kendi kapisinin bitisiginde degil', () {
