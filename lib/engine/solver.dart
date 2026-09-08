@@ -45,11 +45,21 @@ class SolverBudgetExceeded implements Exception {
 Solution? solve(Level level, {int nodeBudget = 6000000}) {
   final budget = _Budget(nodeBudget);
   for (var clones = 0; clones <= level.maxClones; clones++) {
-    // Her derinlik icin taze bir ziyaret kumesi: ayni hayalet kumesine hep
-    // ayni kalan hakla ulasilir, dolayisiyla eleme guvenlidir.
-    final found = _search(level, <List<GameAction>>[], clones, budget, <String>{});
-    if (found != null) {
-      return found;
+    // Iki asama: once ucuz arama (adaylar yalnizca birakilan ize gore elenir).
+    // Zamanlamaya duyarli seviyelerin cogu da bununla cozuluyor; cozulmezse
+    // adaylara tur de katilarak tekrar denenir. Tek asamali titiz arama, ayni
+    // sonucu bulmak icin onlarca kat daha uzun suruyordu.
+    for (final turnKeyed in <bool>[false, true]) {
+      if (turnKeyed && !level.timingSensitive) {
+        break; // turdan bagimsiz seviyede ikinci asamanin getirisi yok
+      }
+      // Her asama icin taze ziyaret kumesi: ayni hayalet kumesine hep ayni
+      // kalan hakla ulasilir, dolayisiyla eleme guvenlidir.
+      final found = _search(level, <List<GameAction>>[], clones, budget,
+          <String>{}, turnKeyed);
+      if (found != null) {
+        return found;
+      }
     }
   }
   return null;
@@ -65,12 +75,13 @@ Solution? _search(
   int remaining,
   _Budget budget,
   Set<String> seen,
+  bool turnKeyed,
 ) {
   if (!seen.add(_ghostKey(ghosts))) {
     return null;
   }
 
-  final explored = _explore(level, ghosts, budget);
+  final explored = _explore(level, ghosts, budget, turnKeyed);
   if (explored.winning != null) {
     return Solution(<List<GameAction>>[...ghosts, explored.winning!]);
   }
@@ -85,6 +96,7 @@ Solution? _search(
       remaining - 1,
       budget,
       seen,
+      turnKeyed,
     );
     if (found != null) {
       return found;
@@ -114,6 +126,7 @@ _Explored _explore(
   Level level,
   List<List<GameAction>> ghosts,
   _Budget budget,
+  bool turnKeyed,
 ) {
   final result = _Explored();
   final root = GameState.withGhosts(level, ghosts);
@@ -149,8 +162,7 @@ _Explored _explore(
         // Zamanlamaya duyarli seviyelerde tur da anahtara girer. Aksi halde
         // "hemen gec" ile "iki tur bekleyip gec" ayni aday sayilir ve kisa
         // olan tutulur; oysa kirilgan bir koprude dogru cevap uzun olandir.
-        final key =
-            level.timingSensitive ? state.stateKey : state.effectKey;
+        final key = turnKeyed ? state.stateKey : state.effectKey;
         if (candidateKeys.add(key)) {
           result.candidates.add(_pathTo(nodes, head));
         }

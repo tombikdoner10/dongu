@@ -1166,4 +1166,294 @@ final List<Level> kLevels = <Level>[
 #############
 ''',
   ),
+  Level.parse(
+    id: 54,
+    par: 0,
+    titleTr: 'İki Düğme',
+    titleEn: 'Two Switches',
+    hintTr: 'Her düğme bir sonraki kapıyı açıyor. Yol seni geri getiriyor.',
+    hintEn: 'Each switch opens the next gate. The path folds back on itself.',
+    maxTurns: 18,
+    maxClones: 0,
+    map: '''
+##########
+#.P.7....#
+#######A##
+#....8...#
+##B#######
+#E.......#
+##########
+''',
+  ),
+  Level.parse(
+    id: 55,
+    par: 1,
+    titleTr: 'Yankı Düğmeyi Bozar',
+    titleEn: 'The Echo Undoes It',
+    hintTr: 'Yankın yolda düğmeye basabilir. Onu nereden geçireceğin önemli.',
+    hintEn: 'Your echo can hit the switch on its way. Where you route it '
+        'matters.',
+    maxTurns: 16,
+    maxClones: 1,
+    map: '''
+###########
+#....7...2#
+#.........#
+#...P.....#
+#####A#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 56,
+    par: 0,
+    titleTr: 'Buz Üstünde Düğme',
+    titleEn: 'Switch on Ice',
+    hintTr: 'Buzda duramazsın ama düğmede durursun. Kayış seni oraya bırakır.',
+    hintEn: 'You cannot stop on ice, but you can stop on a switch. The slide '
+        'delivers you.',
+    maxTurns: 8,
+    maxClones: 0,
+    map: '''
+###########
+#.P****7..#
+#########.#
+#########A#
+#########E#
+###########
+''',
+  ),
+  Level.parse(
+    id: 57,
+    par: 1,
+    titleTr: 'Kaygan Zincir',
+    titleEn: 'Slippery Chain',
+    hintTr: 'Kayış seni koridorun ağzına bırakıyor. Yukarısı için yankı lazım.',
+    hintEn: 'The slide leaves you at the corridor mouth. The way up needs an '
+        'echo.',
+    maxTurns: 7,
+    maxClones: 1,
+    map: '''
+###########
+####E######
+####A######
+####.######
+#.1..****P#
+###########
+''',
+  ),
+  Level.parse(
+    id: 58,
+    par: 1,
+    titleTr: 'Ada Düğmesi',
+    titleEn: 'Island Switch',
+    hintTr: 'Düğme de plaka da öteki adada. Yankını da oraya yollaman gerek.',
+    hintEn: 'Switch and plate both sit on the far island. Your echo has to go '
+        'too.',
+    maxTurns: 11,
+    maxClones: 1,
+    map: '''
+#############
+#.P..(......#
+#############
+#.1...)8.ABE#
+#############
+''',
+  ),
+  Level.parse(
+    id: 59,
+    par: 1,
+    titleTr: 'Tek Yön Düğmesi',
+    titleEn: 'One-Way Switch',
+    hintTr: 'Aşağı inince yukarı dönemezsin. Plakayı tutacak biri yukarıda '
+        'kalmalı.',
+    hintEn: 'Once you drop, there is no climbing back. Somebody must stay up '
+        'top.',
+    maxTurns: 7,
+    maxClones: 1,
+    map: '''
+###########
+#.2.......#
+#....P....#
+#####v#####
+#####7#####
+#####A#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 60,
+    par: 1,
+    titleTr: 'Uzun Yol',
+    titleEn: 'The Long Way',
+    hintTr: 'Düğme bir uçta, plaka diğerinde. İkisi de gerekli.',
+    hintEn: 'The switch at one end, the plate at the other. You need both.',
+    maxTurns: 17,
+    maxClones: 1,
+    map: '''
+###########
+#.2.....7.#
+#.........#
+#....P....#
+#####.#####
+#####A#####
+#####.#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 61,
+    par: 1,
+    titleTr: 'Kırılgan Düğme',
+    titleEn: 'Brittle Switch',
+    hintTr: 'Yankın da düğmeye basıp köprüyü geçecek. Aynı turda basarsanız '
+        'düğme tek sayılır.',
+    hintEn: 'Your echo presses the switch and crosses too. Step on it together '
+        'and it counts once.',
+    maxTurns: 12,
+    maxClones: 1,
+    map: '''
+###########
+#P7~~~~2..#
+#########.#
+#########A#
+#########B#
+#########E#
+###########
+''',
+  ),
+  Level.parse(
+    id: 62,
+    par: 0,
+    titleTr: 'Üç Düğme',
+    titleEn: 'Three Switches',
+    hintTr: 'Sarmal bir yol, üç düğme. Her biri bir sonraki kapıyı açar.',
+    hintEn: 'A spiralling path and three switches, each opening the next gate.',
+    maxTurns: 28,
+    maxClones: 0,
+    map: '''
+###########
+#.P.7.....#
+#########.#
+#.8.....A.#
+#..########
+#.9..B.C.E#
+###########
+''',
+  ),
+  Level.parse(
+    id: 63,
+    par: 1,
+    titleTr: 'Zincirde Düğme',
+    titleEn: 'Switch in the Chain',
+    hintTr: 'Zincirin dibindeki düğme, orada kalacak bir yankıdan tasarruf '
+        'ettirir.',
+    hintEn: 'A switch at the end of the chain saves you an echo.',
+    maxTurns: 7,
+    maxClones: 1,
+    map: '''
+###########
+#....1....#
+#....P....#
+#####A#####
+#....8....#
+#####.#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 64,
+    par: 1,
+    titleTr: 'Solan Düğme',
+    titleEn: 'Fading Switch',
+    hintTr: 'Mavi kapı bir tur açık. İkiniz de aynı anda inip düğmeye birlikte '
+        'basacaksınız.',
+    hintEn: 'The blue gate lasts one turn. You and your echo go down together '
+        'and hit the switch as one.',
+    maxTurns: 8,
+    maxClones: 1,
+    fadeTurns: 1,
+    map: '''
+###########
+#....P....#
+#####T#####
+#####7#####
+#####A#####
+#....2....#
+#####.#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 65,
+    par: 2,
+    titleTr: 'Ağır Düğme',
+    titleEn: 'Heavy Switch',
+    hintTr: 'Düğmeye hep birlikte basın: aynı turda basılırsa bir kez sayılır.',
+    hintEn: 'Press the switch all together: stepped on in one turn, it counts '
+        'once.',
+    maxTurns: 8,
+    maxClones: 2,
+    map: '''
+###########
+#....7....#
+#....P....#
+#####A#####
+#....5....#
+#####.#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 66,
+    par: 0,
+    titleTr: 'Buz Yolu',
+    titleEn: 'Ice Run',
+    hintTr: 'İki kayış, iki duvar. Duvarlar seni doğru yere bırakıyor.',
+    hintEn: 'Two slides, two walls. The walls put you where you need to be.',
+    maxTurns: 4,
+    maxClones: 0,
+    map: '''
+#########
+#.P*****#
+#######*#
+#######*#
+#######E#
+#########
+''',
+  ),
+  Level.parse(
+    id: 67,
+    par: 1,
+    titleTr: 'Sandık ve Düğme',
+    titleEn: 'Crate and Switch',
+    hintTr: 'İki sandık, bir düğme, üç kapı. Tek döngüye sığmaz.',
+    hintEn: 'Two crates, one switch, three gates. Too much for a single loop.',
+    maxTurns: 18,
+    maxClones: 2,
+    map: '''
+###########
+#.2.....3.#
+##X#####X##
+#..7.P....#
+#####.#####
+#####A#####
+#####B#####
+#####C#####
+#####E#####
+###########
+''',
+  ),
 ];
