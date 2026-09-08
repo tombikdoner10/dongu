@@ -58,21 +58,22 @@ void main() {
         // "1 2 3" ile "4 5 6" ayni gruplarin hafif/agir bicimleridir; kolayca
         // karistirilir. Plakasiz bir kapi seviyeyi cozulemez yapar, kapisiz bir
         // plaka ise oyuncuyu bosuna oyalar.
-        final plateGroups = <int>{};
+        // Bir grubu plaka da acabilir dugme de; ikisi de "saglayici" sayilir.
+        final providerGroups = <int>{};
         final doorGroups = <int>{};
         for (final row in level.grid) {
           for (final tile in row) {
-            if (tile.isPlate) {
-              plateGroups.add(tile.group);
+            if (tile.isPlate || tile.type == TileType.toggle) {
+              providerGroups.add(tile.group);
             } else if (tile.type == TileType.door) {
               doorGroups.add(tile.group);
             }
           }
         }
-        expect(doorGroups.difference(plateGroups), isEmpty,
-            reason: 'seviye ${level.id}: plakasi olmayan kapi grubu var');
-        expect(plateGroups.difference(doorGroups), isEmpty,
-            reason: 'seviye ${level.id}: kapisi olmayan plaka grubu var');
+        expect(doorGroups.difference(providerGroups), isEmpty,
+            reason: 'seviye ${level.id}: plakasi/dugmesi olmayan kapi grubu var');
+        expect(providerGroups.difference(doorGroups), isEmpty,
+            reason: 'seviye ${level.id}: kapisi olmayan plaka/dugme grubu var');
       });
 
       test('plaka kendi kapisinin bitisiginde degil', () {

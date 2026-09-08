@@ -1024,4 +1024,146 @@ final List<Level> kLevels = <Level>[
 ###########
 ''',
   ),
+  Level.parse(
+    id: 46,
+    par: 0,
+    titleTr: 'Düğme',
+    titleEn: 'The Switch',
+    hintTr: 'Düğmeye bas ve yürü. Plakadan farkı: çekilince kapanmaz.',
+    hintEn: 'Press the switch and walk on. Unlike a plate, it stays.',
+    maxTurns: 8,
+    maxClones: 0,
+    map: '''
+#########
+#.......#
+#.P.7.AE#
+#.......#
+#########
+''',
+  ),
+  Level.parse(
+    id: 47,
+    par: 1,
+    titleTr: 'Düğme ve Plaka',
+    titleEn: 'Switch and Plate',
+    hintTr: 'Biri basılı tutulmak ister, diğeri istemez. Hangisi hangisi?',
+    hintEn: 'One wants to be held down, the other does not. Which is which?',
+    maxTurns: 23,
+    maxClones: 1,
+    map: '''
+###########
+#.1.......#
+#.P....8..#
+#.#########
+#.A...B..E#
+###########
+''',
+  ),
+  Level.parse(
+    id: 48,
+    par: 0,
+    titleTr: 'Buz',
+    titleEn: 'Ice',
+    hintTr: 'Buzda duramazsın; bir engel seni durdurana kadar kayarsın.',
+    hintEn: 'You cannot stop on ice; you slide until something stops you.',
+    maxTurns: 5,
+    maxClones: 0,
+    map: '''
+##########
+#.P*****##
+#######E##
+##########
+''',
+  ),
+  Level.parse(
+    id: 49,
+    par: 1,
+    titleTr: 'Buzda Yankı',
+    titleEn: 'Echo on Ice',
+    hintTr: 'Kayış seni tam kapının önüne bırakıyor. Kapıyı da birinin '
+        'açması gerek.',
+    hintEn: 'The slide drops you right at the gate. Somebody still has to '
+        'open it.',
+    maxTurns: 4,
+    maxClones: 1,
+    map: '''
+##########
+#.1......#
+#.P*****##
+#######A##
+#######E##
+##########
+''',
+  ),
+  Level.parse(
+    id: 50,
+    par: 1,
+    titleTr: 'Geri Dönüş Yok',
+    titleEn: 'No Way Back',
+    hintTr: 'Oktan geçince sola dönemezsin. Düğmeye önce basmalısın.',
+    hintEn: 'Past the arrow there is no going left. Press the switch first.',
+    maxTurns: 20,
+    maxClones: 1,
+    map: '''
+#############
+#.7.2...P>..#
+#########.###
+#########A###
+#########B###
+#########E###
+#############
+''',
+  ),
+  Level.parse(
+    id: 51,
+    par: 0,
+    titleTr: 'Işınlanma',
+    titleEn: 'The Gateway',
+    hintTr: 'İki ada birbirine değmiyor. Halkaya bas, eşinde çık.',
+    hintEn: 'Two islands that never touch. Step on the ring, come out at its '
+        'twin.',
+    maxTurns: 12,
+    maxClones: 0,
+    map: '''
+###########
+#.P..(....#
+###########
+#.E......)#
+###########
+''',
+  ),
+  Level.parse(
+    id: 52,
+    par: 1,
+    titleTr: 'İki Ada',
+    titleEn: 'Two Islands',
+    hintTr: 'Plaka öteki adada. Yankını da oraya göndermen gerekecek.',
+    hintEn: 'The plate is on the other island. Your echo has to go there too.',
+    maxTurns: 13,
+    maxClones: 1,
+    map: '''
+#############
+#.P...(.....#
+#############
+#.1....)..AE#
+#############
+''',
+  ),
+  Level.parse(
+    id: 53,
+    par: 0,
+    titleTr: 'Zincirleme',
+    titleEn: 'Chain Reaction',
+    hintTr: 'Kay, ışınlan, düğmeye bas, oktan geç. Tek hamlede başlıyor.',
+    hintEn: 'Slide, teleport, press, pass the arrow. It starts with one move.',
+    maxTurns: 8,
+    maxClones: 0,
+    map: '''
+#############
+#.P***(.....#
+#############
+#.....)7.>AE#
+#############
+''',
+  ),
 ];
