@@ -430,17 +430,12 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Split in Two',
     hintTr: 'Ağır plaka iki yankı ister, sandık da kendi plakasını tutar.',
     hintEn: 'The heavy plate wants both echoes; the crate holds its own.',
-    maxTurns: 14,
+    maxTurns: 11,
     maxClones: 2,
     map: '''
 ###########
-#...4...2.#
-#.......X.#
-#....P....#
-#####.#####
-#####A#####
-#####B#####
-#####E#####
+#4.X.2.####
+#P.....ABE#
 ###########
 ''',
   ),
@@ -561,16 +556,17 @@ final List<Level> kLevels = <Level>[
         'kalmaz — üçünüz aynı anda yürüyün.',
     hintEn: 'Both echoes must cross. If one goes first the other is stranded '
         '— all three of you walk as one.',
-    maxTurns: 12,
+    maxTurns: 8,
     maxClones: 2,
     timingSensitive: true,
     map: '''
-###########
-#P..~~~4..#
-#########.#
-#########A#
-#########E#
-###########
+#######
+#P#####
+#~#####
+#~#####
+#~#####
+#4.AE##
+#######
 ''',
   ),
   Level.parse(
@@ -689,19 +685,19 @@ final List<Level> kLevels = <Level>[
     par: 3,
     titleTr: 'Kıl Payı',
     titleEn: 'By a Hair',
-    hintTr: 'Üç plaka, tam sekiz tur. Hiçbir yankı yolunu şaşıramaz.',
-    hintEn: 'Three plates, exactly eight turns. No echo can wander.',
+    hintTr: 'Üç plaka, üç kapı, dar bir tur bütçesi. Her yankı en kısa '
+        'yolu bulmalı.',
+    hintEn: 'Three plates, three gates, a tight budget: every echo must '
+        'take the shortest way.',
     maxTurns: 8,
     maxClones: 3,
     map: '''
-###########
-#.1.2.3...#
-#....P....#
-#####A#####
-#####B#####
-#####C#####
-#####E#####
-###########
+#########
+#1P######
+#2.######
+#3.######
+##.ABCE##
+#########
 ''',
   ),
   Level.parse(
@@ -848,21 +844,18 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Her yankı bir kapı daha derine. En dipteki plaka ikisini birden '
         'istiyor.',
     hintEn: 'Each echo goes one gate deeper. The last plate wants two of them.',
-    maxTurns: 10,
+    maxTurns: 12,
     maxClones: 4,
     map: '''
-###########
-#....1....#
-#....P....#
-#####A#####
-#....2....#
-#####.#####
-#####B#####
-#....6....#
-#####.#####
-#####C#####
-#####E#####
-###########
+#########
+#1P######
+##A######
+##.2.####
+####B####
+####.6.##
+######C##
+######E##
+#########
 ''',
   ),
   Level.parse(
@@ -1173,17 +1166,15 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Yankın yolda düğmeye basabilir. Onu nereden geçireceğin önemli.',
     hintEn: 'Your echo can hit the switch on its way. Where you route it '
         'matters.',
-    maxTurns: 16,
+    maxTurns: 10,
     maxClones: 1,
     map: '''
-###########
-#....7...2#
-#.........#
-#...P.....#
-#####A#####
-#####B#####
-#####E#####
-###########
+##########
+#######E##
+#######B##
+#######A##
+#..7.P..2#
+##########
 ''',
   ),
   Level.parse(
@@ -1194,15 +1185,14 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Buzda duramazsın ama düğmede durursun. Kayış seni oraya bırakır.',
     hintEn: 'You cannot stop on ice, but you can stop on a switch. The slide '
         'delivers you.',
-    maxTurns: 8,
+    maxTurns: 5,
     maxClones: 0,
     map: '''
-###########
-#.P****7..#
-#########.#
-#########A#
-#########E#
-###########
+#########
+#E#######
+#A#######
+#P***7..#
+#########
 ''',
   ),
   Level.parse(
@@ -1436,20 +1426,17 @@ final List<Level> kLevels = <Level>[
     par: 1,
     titleTr: 'Yanlış Düğme',
     titleEn: 'The Wrong Switch',
-    hintTr: 'İki yol da aynı uzunlukta ama biri düğmenin üstünden geçiyor.',
-    hintEn: 'Both routes are the same length, but one of them crosses the '
-        'switch.',
-    maxTurns: 14,
+    hintTr: 'Kısa yol düğmeye uğramıyor. Yankını uzun yoldan '
+        'geçirmelisin.',
+    hintEn: 'The short route skips the switch, so send your echo the long '
+        'way round.',
+    maxTurns: 9,
     maxClones: 1,
     map: '''
-###########
-#.2.7.....#
-#.........#
-#....P....#
-#####A#####
-#####B#####
-#####E#####
-###########
+##########
+#..7..####
+#P...2ABE#
+##########
 ''',
   ),
   Level.parse(
@@ -1461,21 +1448,18 @@ final List<Level> kLevels = <Level>[
         'kaydedilmeli.',
     hintEn: 'The echo that presses must be recorded before the echo that '
         'sits.',
-    maxTurns: 10,
+    maxTurns: 13,
     maxClones: 2,
     map: '''
-###########
-#....7....#
-#....P....#
-#####A#####
-#....2....#
-#####.#####
-#####B#####
-#....3....#
-#####.#####
-#####C#####
-#####E#####
-###########
+##########
+#7P#######
+##A#######
+##..2#####
+###B######
+###..3####
+####C#####
+####E#####
+##########
 ''',
   ),
   Level.parse(
@@ -1646,15 +1630,16 @@ final List<Level> kLevels = <Level>[
     maxTurns: 12,
     maxClones: 3,
     map: '''
-#############
-#.1...9...2.#
-#.....P.....#
-#...........#
-######A######
-######B######
-######C######
-######E######
-#############
+###########
+#1.......2#
+#....9....#
+#....P....#
+#.#########
+#A#########
+#B#########
+#C#########
+#E#########
+###########
 ''',
   ),
   Level.parse(
