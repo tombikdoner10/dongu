@@ -43,7 +43,6 @@ class SolverBudgetExceeded implements Exception {
 /// karsilik **yanlis pozitif uretmesi imkansizdir**: dondurdugu her cozum
 /// motorda oynatilarak dogrulanir.
 Solution? solve(Level level, {int nodeBudget = 6000000}) {
-  final budget = _Budget(nodeBudget);
   for (var clones = 0; clones <= level.maxClones; clones++) {
     // Iki asama: once ucuz arama (adaylar yalnizca birakilan ize gore elenir).
     // Zamanlamaya duyarli seviyelerin cogu da bununla cozuluyor; cozulmezse
@@ -53,12 +52,25 @@ Solution? solve(Level level, {int nodeBudget = 6000000}) {
       if (turnKeyed && !level.timingSensitive) {
         break; // turdan bagimsiz seviyede ikinci asamanin getirisi yok
       }
+      // Her deneme kendi butcesiyle calisir. Ortak butce kullanildiginda
+      // dusuk yanki sayilarindaki titiz arama butceyi tuketip asil cozumun
+      // bulunmasini engelliyordu.
+      final budget = _Budget(nodeBudget);
       // Her asama icin taze ziyaret kumesi: ayni hayalet kumesine hep ayni
       // kalan hakla ulasilir, dolayisiyla eleme guvenlidir.
-      final found = _search(level, <List<GameAction>>[], clones, budget,
-          <String>{}, turnKeyed);
-      if (found != null) {
-        return found;
+      try {
+        final found = _search(level, <List<GameAction>>[], clones, budget,
+            <String>{}, turnKeyed);
+        if (found != null) {
+          return found;
+        }
+      } on SolverBudgetExceeded {
+        // Titiz arama pahalidir; tukendiyse "bulamadim" deyip devam ederiz.
+        // Ucuz aramanin tukenmesi ise gercekten seviyenin fazla buyuk olmasi
+        // demektir, o yuzden yukari birakilir.
+        if (!turnKeyed) {
+          rethrow;
+        }
       }
     }
   }

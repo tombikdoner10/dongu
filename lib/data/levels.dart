@@ -1456,4 +1456,245 @@ final List<Level> kLevels = <Level>[
 ###########
 ''',
   ),
+  Level.parse(
+    id: 68,
+    par: 1,
+    titleTr: 'Yanlış Düğme',
+    titleEn: 'The Wrong Switch',
+    hintTr: 'İki yol da aynı uzunlukta ama biri düğmenin üstünden geçiyor.',
+    hintEn: 'Both routes are the same length, but one of them crosses the '
+        'switch.',
+    maxTurns: 14,
+    maxClones: 1,
+    map: '''
+###########
+#.2.7.....#
+#.........#
+#....P....#
+#####A#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 69,
+    par: 2,
+    titleTr: 'Sıra Meselesi',
+    titleEn: 'A Matter of Order',
+    hintTr: 'Düğmeye basacak yankı, plakaya oturacak yankıdan önce '
+        'kaydedilmeli.',
+    hintEn: 'The echo that presses must be recorded before the echo that '
+        'sits.',
+    maxTurns: 10,
+    maxClones: 2,
+    map: '''
+###########
+#....7....#
+#....P....#
+#####A#####
+#....2....#
+#####.#####
+#####B#####
+#....3....#
+#####.#####
+#####C#####
+#####E#####
+###########
+''',
+  ),
+  Level.parse(
+    id: 70,
+    par: 1,
+    titleTr: 'Kayarak Bas',
+    titleEn: 'Slide and Press',
+    hintTr: 'Kayış seni düğmeye götürüyor ama plakaya götürmüyor.',
+    hintEn: 'The slide carries you to the switch, but never to the plate.',
+    maxTurns: 10,
+    maxClones: 1,
+    map: '''
+############
+#.2........#
+#.P****7..##
+#########.##
+#########A##
+#########B##
+#########E##
+############
+''',
+  ),
+  Level.parse(
+    id: 71,
+    par: 2,
+    titleTr: 'Ada Zinciri',
+    titleEn: 'Island Chain',
+    hintTr: 'Öteki adada bir düğme, bir de plaka var. İkisi de tutulmalı.',
+    hintEn: 'The far island holds a switch and a plate. Both must be dealt '
+        'with.',
+    maxTurns: 14,
+    maxClones: 2,
+    map: '''
+##############
+#.P...(......#
+##############
+#.1.2.)9.ABCE#
+##############
+''',
+  ),
+  Level.parse(
+    id: 72,
+    par: 1,
+    titleTr: 'Ok ve Düğme',
+    titleEn: 'Arrow and Switch',
+    hintTr: 'Ok seni tek yöne sokuyor. Düğmeye girmeden önce basmalısın.',
+    hintEn: 'The arrow commits you. Press the switch before you go in.',
+    maxTurns: 16,
+    maxClones: 1,
+    map: '''
+#############
+#.7...2...P.#
+#.#########.#
+#.A.......>.#
+##B##########
+##E##########
+#############
+''',
+  ),
+  Level.parse(
+    id: 73,
+    par: 2,
+    titleTr: 'Çifte Parite',
+    titleEn: 'Double Parity',
+    hintTr: 'İki yankı da düğmenin üstünden geçecek. Aynı turda geçerlerse '
+        'bir kez sayılır.',
+    hintEn: 'Both echoes will cross the switch. Crossing together counts '
+        'once.',
+    maxTurns: 12,
+    maxClones: 2,
+    map: '''
+###########
+#P7~~~~5..#
+#########.#
+#########A#
+#########B#
+#########E#
+###########
+''',
+  ),
+  Level.parse(
+    id: 74,
+    par: 0,
+    titleTr: 'Buz Sarmalı',
+    titleEn: 'Ice Spiral',
+    hintTr: 'Her duvar seni bir sonraki kayışa hazırlıyor.',
+    hintEn: 'Each wall sets you up for the next slide.',
+    maxTurns: 8,
+    maxClones: 0,
+    map: '''
+##########
+#.P*****##
+#######*##
+#######*##
+#E******##
+##########
+''',
+  ),
+  Level.parse(
+    id: 75,
+    par: 2,
+    titleTr: 'Üç Beden',
+    titleEn: 'Three Bodies',
+    hintTr: 'Ağır plaka iki beden, düğme bir dokunuş ister.',
+    hintEn: 'The heavy plate wants two bodies; the switch wants one touch.',
+    maxTurns: 9,
+    maxClones: 2,
+    map: '''
+#############
+#.....4.....#
+#.....P.....#
+#.8#######..#
+#.A.........#
+#.B##########
+#.E##########
+#############
+''',
+  ),
+  Level.parse(
+    id: 76,
+    par: 1,
+    titleTr: 'Dar Ada',
+    titleEn: 'Narrow Island',
+    hintTr: 'Işınlanma tek yön değil: aynı kapıdan geri dönebilirsin.',
+    hintEn: 'The gateway runs both ways: you can come back the same door.',
+    maxTurns: 12,
+    maxClones: 1,
+    map: '''
+############
+#.P..(.....#
+############
+#.1..).A..E#
+############
+''',
+  ),
+  Level.parse(
+    id: 77,
+    par: 1,
+    titleTr: 'Düğme Köprüsü',
+    titleEn: 'Switch Bridge',
+    hintTr: 'Köprüyü geçen düğmeye basar ama geri dönemez.',
+    hintEn: 'Whoever crosses hits the switch and can never return.',
+    maxTurns: 14,
+    maxClones: 2,
+    map: '''
+#############
+#P.~~~~7..2.#
+##########.##
+##########A##
+##########B##
+##########E##
+#############
+''',
+  ),
+  Level.parse(
+    id: 78,
+    par: 2,
+    titleTr: 'Dört Kapı',
+    titleEn: 'Four Gates',
+    hintTr: 'Düğme bir kapıyı halleder. Kalan üçü beden ister.',
+    hintEn: 'The switch handles one gate. The other three want bodies.',
+    maxTurns: 12,
+    maxClones: 3,
+    map: '''
+#############
+#.1...9...2.#
+#.....P.....#
+#...........#
+######A######
+######B######
+######C######
+######E######
+#############
+''',
+  ),
+  Level.parse(
+    id: 79,
+    par: 1,
+    titleTr: 'Geri Sayım',
+    titleEn: 'Countdown',
+    hintTr: 'Mavi kapı iki tur açık. Düğmeye basıp dönecek vaktin var mı?',
+    hintEn: 'The blue gate lasts two turns. Time enough to press and return?',
+    maxTurns: 12,
+    maxClones: 2,
+    fadeTurns: 2,
+    map: '''
+###########
+#.7.P.2...#
+#####T#####
+#####.#####
+#####A#####
+#####B#####
+#####E#####
+###########
+''',
+  ),
 ];
