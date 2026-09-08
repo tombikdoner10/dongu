@@ -139,24 +139,19 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Last Loop',
     hintTr: 'Üç kapı, tek sandık, iki yankı. Sandığı doğru plakaya götür.',
     hintEn: 'Three gates, one crate, two echoes. Put the crate where it counts.',
-    maxTurns: 14,
+    maxTurns: 13,
     maxClones: 2,
     map: '''
-###########
-#.1.....2.#
-#....X....#
-#.3.....P.#
-#####.#####
-#####A#####
-#####B#####
-#####C#####
-#####E#####
-###########
+#########
+#1X.#####
+#2..#####
+#P.3ABCE#
+#########
 ''',
     solution: <List<GameAction>>[
-      <GameAction>[_u, _l, _l, _l, _l, _l, _d, _l, _u, _d],
-      <GameAction>[_u, _u],
-      <GameAction>[_l, _l, _l, _d, _w, _w, _w, _w, _w, _d, _d, _d, _d],
+      <GameAction>[_u],
+      <GameAction>[_r, _r],
+      <GameAction>[_u, _r, _r, _u, _l, _d, _d, _r, _r, _r, _r, _r],
     ],
   ),
   Level.parse(
@@ -296,19 +291,17 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Three Colours',
     hintTr: 'Üç kapı, iki yankı. Üçüncüsünü sandık tutacak.',
     hintEn: 'Three gates, two echoes. The crate must hold the third.',
-    maxTurns: 16,
+    maxTurns: 12,
     maxClones: 2,
     map: '''
-#############
-#.1.......3.#
-#.....X.....#
-#.2...P.....#
-######.######
-######A######
-######B######
-######C######
-######E######
-#############
+###########
+#####E#####
+#####C#####
+#####B#####
+#####A#####
+#1..X..3..#
+#2...P....#
+###########
 ''',
   ),
   Level.parse(
@@ -359,20 +352,17 @@ final List<Level> kLevels = <Level>[
     par: 2,
     titleTr: 'Son Yankı',
     titleEn: 'Final Echo',
-    hintTr: 'Üç kapı, iki yankı, uzaktaki bir sandık. Hepsi yerini bulmalı.',
-    hintEn: 'Three gates, two echoes, one distant crate. Everything must land.',
-    maxTurns: 13,
+    hintTr: 'Sandık tek yönde gitmiyor: önce sağa, sonra aşağı '
+        'itilmeli.',
+    hintEn: 'The crate will not do it in one direction: push it right, '
+        'then down.',
+    maxTurns: 11,
     maxClones: 2,
     map: '''
 ###########
-#.1.....3.#
-#.......X.#
-#.2..P....#
-#####.#####
-#####A#####
-#####B#####
-#####C#####
-#####E#####
+#12...#####
+#P.X..ABCE#
+#....3#####
 ###########
 ''',
   ),
@@ -533,16 +523,13 @@ final List<Level> kLevels = <Level>[
     maxTurns: 8,
     maxClones: 3,
     map: '''
-#########
-#.1...2.#
-#...P...#
-#.3.....#
-####.####
-####A####
-####B####
-####C####
-####E####
-#########
+###########
+#####1#####
+#####.#####
+#EABC.P..2#
+#####.#####
+#####3#####
+###########
 ''',
   ),
   Level.parse(
@@ -594,20 +581,15 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Mavi kapıdan hemen geçmelisin, sonra içeride yankını bekle.',
     hintEn: 'Dash through the blue gate at once, then wait inside for your '
         'echo.',
-    maxTurns: 9,
+    maxTurns: 7,
     maxClones: 2,
-    fadeTurns: 2,
+    fadeTurns: 3,
     map: '''
-###########
-#.1.....2.#
-#.......X.#
-#....P....#
-#####.#####
-#####T#####
-#####A#####
-#####B#####
-#####E#####
-###########
+##########
+#1X.######
+#..2TABE##
+#.P.######
+##########
 ''',
   ),
   Level.parse(
@@ -777,15 +759,17 @@ final List<Level> kLevels = <Level>[
     maxTurns: 7,
     maxClones: 3,
     map: '''
-###########
-#....1....#
-#....P....#
-#####A#####
-#....5....#
-#####.#####
-#####B#####
-#####E#####
-###########
+#########
+###...###
+##..1..##
+###.P.###
+####A####
+###...###
+##..5..##
+###...###
+####B####
+####E####
+#########
 ''',
   ),
   Level.parse(
@@ -801,13 +785,12 @@ final List<Level> kLevels = <Level>[
     timingSensitive: true,
     map: '''
 ###########
-#....1....#
-#....P....#
-#####A#####
-#.2~~~....#
-#####.#####
-#####B#####
-#####E#####
+#P..1.....#
+##A########
+##~~2.....#
+##.########
+##B########
+##E########
 ###########
 ''',
   ),
@@ -916,17 +899,15 @@ final List<Level> kLevels = <Level>[
         'geçmeli, üçüncüsü uzaktaki plakayı tutmalı.',
     hintEn: 'A heavy plate waits across the bridge. Two echoes must cross, '
         'a third holds the far plate.',
-    maxTurns: 14,
+    maxTurns: 11,
     maxClones: 3,
     timingSensitive: true,
     map: '''
-#############
-#P..~~~5..1.#
-##########.##
-##########A##
-##########B##
-##########E##
-#############
+###########
+#P.~~######
+####~######
+#..5.1.ABE#
+###########
 ''',
   ),
   Level.parse(
@@ -981,21 +962,17 @@ final List<Level> kLevels = <Level>[
     par: 4,
     titleTr: 'Kalabalık',
     titleEn: 'The Crowd',
-    hintTr: 'İki ağır plaka üst üste. Alttakine inebilmek için üstteki '
-        'dolu olmalı.',
-    hintEn: 'Two heavy plates, one above the other. The lower one is out of '
-        'reach until the upper is full.',
-    maxTurns: 7,
+    hintTr: 'İki ağır plaka arka arkaya. İkinciye geçmek için '
+        'birincisi dolu kalmalı.',
+    hintEn: 'Two heavy plates in a row: the second is out of reach '
+        'until the first stays full.',
+    maxTurns: 8,
     maxClones: 4,
     map: '''
 ###########
-#....4....#
-#....P....#
-#####A#####
-#....5....#
-#####.#####
-#####B#####
-#####E#####
+#...#...###
+#.4.A.5.BE#
+#.P.#...###
 ###########
 ''',
   ),
@@ -1102,16 +1079,14 @@ final List<Level> kLevels = <Level>[
     titleEn: 'No Way Back',
     hintTr: 'Oktan geçince sola dönemezsin. Düğmeye önce basmalısın.',
     hintEn: 'Past the arrow there is no going left. Press the switch first.',
-    maxTurns: 20,
+    maxTurns: 19,
     maxClones: 1,
     map: '''
-#############
-#.7.2...P>..#
-#########.###
-#########A###
-#########B###
-#########E###
-#############
+#########
+#7.2.P>.#
+#######.#
+#EA...B.#
+#########
 ''',
   ),
   Level.parse(
@@ -1139,14 +1114,16 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Two Islands',
     hintTr: 'Plaka öteki adada. Yankını da oraya göndermen gerekecek.',
     hintEn: 'The plate is on the other island. Your echo has to go there too.',
-    maxTurns: 13,
+    maxTurns: 7,
     maxClones: 1,
     map: '''
-#############
-#.P...(.....#
-#############
-#.1....)..AE#
-#############
+#######
+#P#)..#
+#1#...#
+#(#...#
+###A..#
+###E###
+#######
 ''',
   ),
   Level.parse(
@@ -1156,14 +1133,17 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Chain Reaction',
     hintTr: 'Kay, ışınlan, düğmeye bas, oktan geç. Tek hamlede başlıyor.',
     hintEn: 'Slide, teleport, press, pass the arrow. It starts with one move.',
-    maxTurns: 8,
+    maxTurns: 6,
     maxClones: 0,
     map: '''
-#############
-#.P***(.....#
-#############
-#.....)7.>AE#
-#############
+########
+#P***(##
+######)#
+######7#
+######v#
+######A#
+######E#
+########
 ''',
   ),
   Level.parse(
@@ -1252,14 +1232,17 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Düğme de plaka da öteki adada. Yankını da oraya yollaman gerek.',
     hintEn: 'Switch and plate both sit on the far island. Your echo has to go '
         'too.',
-    maxTurns: 11,
+    maxTurns: 8,
     maxClones: 1,
     map: '''
-#############
-#.P..(......#
-#############
-#.1...)8.ABE#
-#############
+#######
+#P.(..#
+#######
+#18)..#
+#####A#
+#####B#
+#####E#
+#######
 ''',
   ),
   Level.parse(
@@ -1292,18 +1275,15 @@ final List<Level> kLevels = <Level>[
     titleEn: 'The Long Way',
     hintTr: 'Düğme bir uçta, plaka diğerinde. İkisi de gerekli.',
     hintEn: 'The switch at one end, the plate at the other. You need both.',
-    maxTurns: 17,
+    maxTurns: 13,
     maxClones: 1,
     map: '''
 ###########
-#.2.....7.#
-#.........#
-#....P....#
-#####.#####
-#####A#####
-#####.#####
-#####B#####
-#####E#####
+#2#######E#
+#.#######B#
+#.#######A#
+#.#######.#
+#P...7....#
 ###########
 ''',
   ),
@@ -1316,16 +1296,15 @@ final List<Level> kLevels = <Level>[
         'düğme tek sayılır.',
     hintEn: 'Your echo presses the switch and crosses too. Step on it together '
         'and it counts once.',
-    maxTurns: 12,
+    maxTurns: 9,
     maxClones: 1,
     map: '''
-###########
-#P7~~~~2..#
-#########.#
-#########A#
-#########B#
-#########E#
-###########
+########
+#####7P#
+#####~##
+#####~##
+#EBA.2##
+########
 ''',
   ),
   Level.parse(
@@ -1358,15 +1337,13 @@ final List<Level> kLevels = <Level>[
     maxTurns: 7,
     maxClones: 1,
     map: '''
-###########
-#....1....#
-#....P....#
-#####A#####
-#....8....#
-#####.#####
-#####B#####
-#####E#####
-###########
+#######
+#1P####
+##A####
+##.8###
+###.B##
+####E##
+#######
 ''',
   ),
   Level.parse(
@@ -1402,17 +1379,15 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Düğmeye hep birlikte basın: aynı turda basılırsa bir kez sayılır.',
     hintEn: 'Press the switch all together: stepped on in one turn, it counts '
         'once.',
-    maxTurns: 8,
+    maxTurns: 12,
     maxClones: 2,
     map: '''
 ###########
-#....7....#
-#....P....#
-#####A#####
-#....5....#
-#####.#####
-#####B#####
-#####E#####
+#.7.#.....#
+#...A.#.#.#
+#.P.#..5..#
+########B##
+########E##
 ###########
 ''',
   ),
@@ -1531,14 +1506,20 @@ final List<Level> kLevels = <Level>[
     hintTr: 'Öteki adada bir düğme, bir de plaka var. İkisi de tutulmalı.',
     hintEn: 'The far island holds a switch and a plate. Both must be dealt '
         'with.',
-    maxTurns: 14,
+    maxTurns: 9,
     maxClones: 2,
     map: '''
-##############
-#.P...(......#
-##############
-#.1.2.)9.ABCE#
-##############
+########
+#P..(..#
+########
+###1####
+###).2.#
+###9####
+###A####
+###B####
+###C####
+###E####
+########
 ''',
   ),
   Level.parse(
@@ -1569,16 +1550,15 @@ final List<Level> kLevels = <Level>[
         'bir kez sayılır.',
     hintEn: 'Both echoes will cross the switch. Crossing together counts '
         'once.',
-    maxTurns: 12,
+    maxTurns: 6,
     maxClones: 2,
     map: '''
-###########
-#P7~~~~5..#
-#########.#
-#########A#
-#########B#
-#########E#
-###########
+##########
+#..P..ABE#
+###7######
+###~######
+###5######
+##########
 ''',
   ),
   Level.parse(
@@ -1624,16 +1604,18 @@ final List<Level> kLevels = <Level>[
     par: 1,
     titleTr: 'Dar Ada',
     titleEn: 'Narrow Island',
-    hintTr: 'Işınlanma tek yön değil: aynı kapıdan geri dönebilirsin.',
-    hintEn: 'The gateway runs both ways: you can come back the same door.',
-    maxTurns: 12,
+    hintTr: 'Işınlanma kapısı seni alt sıraya atar. Plaka orada kalmalı, '
+        'çıkış yukarıda.',
+    hintEn: 'The portal drops you to the lower row: the plate stays down '
+        'there, the exit is up top.',
+    maxTurns: 8,
     maxClones: 1,
     map: '''
-############
-#.P..(.....#
-############
-#.1..).A..E#
-############
+########
+#P.(#AE#
+#####.##
+#1..)..#
+########
 ''',
   ),
   Level.parse(
@@ -1643,16 +1625,15 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Switch Bridge',
     hintTr: 'Köprüyü geçen düğmeye basar ama geri dönemez.',
     hintEn: 'Whoever crosses hits the switch and can never return.',
-    maxTurns: 14,
+    maxTurns: 11,
     maxClones: 2,
     map: '''
-#############
-#P.~~~~7..2.#
-##########.##
-##########A##
-##########B##
-##########E##
-#############
+##########
+#P..7#####
+####~#####
+####~#####
+####.2ABE#
+##########
 ''',
   ),
   Level.parse(
