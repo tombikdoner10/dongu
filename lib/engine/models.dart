@@ -52,7 +52,11 @@ enum TileType {
   /// engellemedigi icin ayni kareye yiginabilirler.
   heavyPlate,
 
-  /// Grubundaki plaka basiliyken gecilir.
+  /// Uzerine basildiginda grubun durumunu kalici olarak degistirir; orada
+  /// durmak gerekmez. Plakanin tersi: "biri kalmali" kisitini kaldirir.
+  toggle,
+
+  /// Grubundaki plaka basiliyken ya da dugmesi acikken gecilir.
   door,
 
   /// Her dongunun yalnizca ilk birkac turunda acik olan kapi. Hicbir plakaya
@@ -62,10 +66,21 @@ enum TileType {
   /// Uzerinden bir beden cekildiginde coken zemin. Cokme dongu basinda geri
   /// alinir.
   fragile,
+
+  /// Uzerine adim atan beden, bir engele kadar ayni yonde kayar.
+  ice,
+
+  /// Yalnizca belirli bir yonde girilebilen kare. Yon [Tile.oneWayDirection].
+  oneWay,
+
+  /// Cifti olan isinlanma kapisi; uzerine gelen beden esine tasinir.
+  teleport,
 }
 
-/// Haritadaki sabit bir kare. [group] yalnizca plaka ve kapilar icin
-/// anlamlidir; ayni gruptaki plaka ilgili kapiyi acar.
+/// Haritadaki sabit bir kare.
+///
+/// [group] birden fazla is gorur: plaka/dugme/kapi icin renk grubu, tek yonlu
+/// gecit icin yon, isinlanma kapisi icin cift numarasi.
 @immutable
 class Tile {
   const Tile(this.type, [this.group = -1]);
@@ -79,9 +94,18 @@ class Tile {
   /// Grubun acilmasi icin plakanin uzerinde kac beden gerekir.
   int get requiredBodies => type == TileType.heavyPlate ? 2 : 1;
 
+  /// Tek yonlu gecidin izin verdigi yon.
+  GameAction get oneWayDirection => switch (group) {
+        0 => GameAction.up,
+        1 => GameAction.down,
+        2 => GameAction.left,
+        _ => GameAction.right,
+      };
+
   static const Tile wall = Tile(TileType.wall);
   static const Tile floor = Tile(TileType.floor);
   static const Tile exit = Tile(TileType.exit);
   static const Tile fragile = Tile(TileType.fragile);
   static const Tile fadingDoor = Tile(TileType.fadingDoor);
+  static const Tile ice = Tile(TileType.ice);
 }

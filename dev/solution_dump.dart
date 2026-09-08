@@ -48,7 +48,17 @@ String _tileGlyph(Tile tile) => switch (tile.type) {
       TileType.exit => 'E',
       TileType.plate => '${tile.group + 1}',
       TileType.heavyPlate => '${tile.group + 4}',
+      TileType.toggle => '${tile.group + 7}',
       TileType.door => String.fromCharCode(65 + tile.group),
       TileType.fadingDoor => 'T',
       TileType.fragile => '~',
+      TileType.ice => '*',
+      TileType.oneWay => switch (tile.oneWayDirection) {
+          GameAction.up => '^',
+          GameAction.down => 'v',
+          GameAction.left => '<',
+          _ => '>',
+        },
+      // Iki uc de ayni gorunur; dokum icin yeterli.
+      TileType.teleport => tile.group == 0 ? '(' : '[',
     };

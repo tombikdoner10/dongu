@@ -239,6 +239,15 @@ class _BoardPainter extends CustomPainter {
             _paintFadingDoor(canvas, rect, cell);
           case TileType.fragile:
             _paintFragile(canvas, rect, cell);
+          case TileType.toggle:
+            _paintToggle(canvas, rect, cell, tile.group,
+                state.latched.contains(tile.group));
+          case TileType.ice:
+            _paintIce(canvas, rect, cell);
+          case TileType.oneWay:
+            _paintOneWay(canvas, rect, cell, tile.oneWayDirection);
+          case TileType.teleport:
+            _paintTeleport(canvas, rect, cell, tile.group);
           case TileType.wall:
           case TileType.floor:
             break;
@@ -303,6 +312,103 @@ class _BoardPainter extends CustomPainter {
       Offset(c.dx + cell * 0.2, c.dy + cell * 0.2),
       paint,
     );
+  }
+
+  /// Dugme: plakadan farkli olsun diye kare. Cevrildiginde ici dolar.
+  void _paintToggle(
+      Canvas canvas, Rect rect, double cell, int group, bool isOn) {
+    final color = DColors.group(group);
+    final body = RRect.fromRectAndRadius(
+        rect.deflate(cell * 0.2), Radius.circular(cell * 0.07));
+    canvas.drawRRect(
+      body,
+      Paint()..color = color.withValues(alpha: isOn ? 0.85 : 0.12),
+    );
+    canvas.drawRRect(
+      body,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(1.4, cell * 0.05)
+        ..color = color.withValues(alpha: isOn ? 1 : 0.7),
+    );
+    _paintSymbol(
+      canvas,
+      rect.center,
+      cell * 0.12,
+      symbolFor(group),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = math.max(1, cell * 0.035)
+        ..color = isOn ? DColors.bgTop.withValues(alpha: 0.8) : color,
+    );
+  }
+
+  /// Buz: soguk zemin, uzerinde kayma hissi veren ince parlamalar.
+  void _paintIce(Canvas canvas, Rect rect, double cell) {
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+          rect.deflate(cell * 0.045), Radius.circular(cell * 0.16)),
+      Paint()..color = DColors.ice.withValues(alpha: 0.15),
+    );
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = math.max(1, cell * 0.03)
+      ..strokeCap = StrokeCap.round
+      ..color = DColors.ice.withValues(alpha: 0.5);
+    for (final offset in <double>[0.26, 0.5]) {
+      canvas.drawLine(
+        Offset(rect.left + cell * offset, rect.top + cell * (offset + 0.2)),
+        Offset(rect.left + cell * (offset + 0.24),
+            rect.top + cell * (offset - 0.04)),
+        paint,
+      );
+    }
+  }
+
+  /// Tek yonlu gecit: izin verilen yone bakan dolu ok.
+  void _paintOneWay(
+      Canvas canvas, Rect rect, double cell, GameAction direction) {
+    final centre = rect.center;
+    final radius = cell * 0.22;
+    final dx = direction.dx.toDouble();
+    final dy = direction.dy.toDouble();
+    final tip = Offset(centre.dx + dx * radius, centre.dy + dy * radius);
+    final back = Offset(
+        centre.dx - dx * radius * 0.65, centre.dy - dy * radius * 0.65);
+    // Yone dik birim vektor: okun tabanini acmak icin.
+    final px = -dy;
+    final py = dx;
+    final path = Path()
+      ..moveTo(tip.dx, tip.dy)
+      ..lineTo(back.dx + px * radius * 0.8, back.dy + py * radius * 0.8)
+      ..lineTo(back.dx - px * radius * 0.8, back.dy - py * radius * 0.8)
+      ..close();
+    canvas.drawPath(
+        path, Paint()..color = DColors.oneWay.withValues(alpha: 0.8));
+  }
+
+  /// Isinlanma kapisi: ic ice halkalar. Cift numarasi halka sayisini belirler.
+  void _paintTeleport(Canvas canvas, Rect rect, double cell, int pair) {
+    final centre = rect.center;
+    canvas.drawCircle(
+      centre,
+      cell * 0.3,
+      Paint()
+        ..color = DColors.teleport.withValues(alpha: 0.12)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, cell * 0.12),
+    );
+    final rings = 2 + pair;
+    for (var i = 0; i < rings; i++) {
+      final radius = cell * (0.3 - i * 0.09);
+      canvas.drawCircle(
+        centre,
+        radius,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = math.max(1, cell * 0.03)
+          ..color = DColors.teleport.withValues(alpha: i == 0 ? 0.9 : 0.5),
+      );
+    }
   }
 
   void _paintExit(Canvas canvas, Rect rect, double cell) {

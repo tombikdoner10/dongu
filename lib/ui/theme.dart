@@ -27,6 +27,16 @@ abstract final class DColors {
   /// Kirilgan zemin.
   static const Color fragile = Color(0xFF8A7BA8);
 
+  /// Buz: soguk ve parlak.
+  static const Color ice = Color(0xFF9AD8FF);
+
+  /// Tek yonlu gecidin oku.
+  static const Color oneWay = Color(0xFF8FA6D8);
+
+  /// Isinlanma kapisi. Ciftler renkle degil halka sayisiyla ayrilir; palet
+  /// zaten kalabalik.
+  static const Color teleport = Color(0xFFCFE0FF);
+
   /// Plaka/kapi gruplari: 0 kehribar, 1 gul, 2 menekse.
   static const List<Color> groups = <Color>[
     Color(0xFFFFB454),

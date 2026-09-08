@@ -166,17 +166,16 @@ final List<Level> kLevels = <Level>[
     titleEn: 'The Far Plate',
     hintTr: 'Plaka uzakta. Yankının oraya varması zaman alır.',
     hintEn: 'The plate is far. Your echo needs time to reach it.',
-    maxTurns: 12,
+    maxTurns: 11,
     maxClones: 1,
+    // Yatay kosu, cikis sagda: dikey koridor tekduzeliginden kacinmak icin.
     map: '''
 #############
 #.1.........#
 #...........#
-#......P....#
-#######.#####
-#######A#####
-#######.#####
-#######E#####
+#..P.########
+#....A.....E#
+#....########
 #############
 ''',
   ),
@@ -187,17 +186,19 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Tight Squeeze',
     hintTr: 'Sandık yolu tıkıyor. Önce onu kenara it.',
     hintEn: 'The crate blocks the way. Shove it aside first.',
-    maxTurns: 10,
+    maxTurns: 7,
     maxClones: 1,
+    // Cikis yukarida; sandik koridor agzini tikiyor, yandan itilmeli.
+    // Plaka bilerek sandigin satirinda degil: yoksa sandik plakaya itilir ve
+    // yanki gereksiz kalirdi.
     map: '''
 #########
-#.1.....#
-#.......#
-#..PX...#
+####E####
 ####.####
 ####A####
 ####.####
-####E####
+#...X...#
+#.1..P..#
 #########
 ''',
   ),
@@ -253,39 +254,39 @@ final List<Level> kLevels = <Level>[
     titleEn: 'Bank It',
     hintTr: 'İki sandık, tek döngüye sığmaz. Yaptığın işi yankına devret.',
     hintEn: 'Two crates will not fit in one loop. Hand the work to your echo.',
-    maxTurns: 12,
+    maxTurns: 16,
     maxClones: 2,
+    // Acik oda + yatay kapi dizisi. Sandiklar niste: yalnizca yukari, kendi
+    // plakalarina itilebilirler.
     map: '''
 ###########
 #.1.....2.#
-#..X...X..#
+##X#####X##
 #....P....#
-#####.#####
-#####A#####
-#####B#####
-#####E#####
+#.#########
+#.A...B..E#
 ###########
 ''',
   ),
   Level.parse(
     id: 12,
-    par: 2,
-    titleTr: 'Yan Yana',
-    titleEn: 'Side by Side',
-    hintTr: 'Plakalar yan yana ama turun çok dar.',
-    hintEn: 'The plates sit close, but your turns are tight.',
-    maxTurns: 8,
-    maxClones: 2,
+    par: 1,
+    titleTr: 'Çember',
+    titleEn: 'The Ring',
+    hintTr: 'Çıkış tam ortada ama plakaya varmak için bütün çemberi dönmen '
+        'gerek.',
+    hintEn: 'The exit sits in the middle, but the plate is a full lap away.',
+    maxTurns: 13,
+    maxClones: 1,
+    // Halka: cikis ortada, plakaya ulasmak icin butun cemberi donmek gerek.
     map: '''
-###########
-#.1.2.....#
-#.........#
-#....P....#
-#####.#####
-#####A#####
-#####B#####
-#####E#####
-###########
+#########
+#...1...#
+#.#####.#
+#.#.E.#.#
+#.##A##.#
+#...P...#
+#########
 ''',
   ),
   Level.parse(

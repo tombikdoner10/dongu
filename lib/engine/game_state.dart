@@ -29,6 +29,7 @@ class _Snapshot {
     this.ghosts,
     this.boxes,
     this.collapsed,
+    this.latched,
     this.recordings,
     this.current,
     this.turn,
@@ -39,6 +40,7 @@ class _Snapshot {
   final List<Pos> ghosts;
   final List<Pos> boxes;
   final Set<Pos> collapsed;
+  final Set<int> latched;
   final List<List<GameAction>> recordings;
   final List<GameAction> current;
   final int turn;
@@ -69,6 +71,7 @@ class GameState {
     ghosts = List<Pos>.of(other.ghosts);
     boxes = List<Pos>.of(other.boxes);
     collapsed = Set<Pos>.of(other.collapsed);
+    latched = Set<int>.of(other.latched);
     recordings = other.recordings.map(List<GameAction>.of).toList();
     current = List<GameAction>.of(other.current);
     turn = other.turn;
@@ -83,6 +86,9 @@ class GameState {
 
   /// Bu dongude cokmus kirilgan zeminler.
   late Set<Pos> collapsed;
+
+  /// Dugmesi cevrilmis, yani acik kalan kapi gruplari.
+  late Set<int> latched;
 
   /// Tamamlanmis dongulerin kayitlari; her biri bir hayaleti surer.
   late List<List<GameAction>> recordings;
@@ -133,13 +139,15 @@ class GameState {
   /// Arama sirasinda tekrar eden durumlari elemek icin anahtar.
   String get stateKey => '$effectKey|$turn';
 
-  /// Bir kaydin gelecege birakabilecegi izin tamami: nerede durdugu, sandiklari
-  /// nereye koydugu ve hangi zeminleri cokerttigi. Tur bilincli olarak disarida
-  /// birakilir; ayni ize varan iki yoldan kisa olani her zaman en az iyisidir.
+  /// Bir kaydin gelecege birakabilecegi izin tamami: nerede durdugu,
+  /// sandiklari nereye koydugu, hangi zeminleri cokerttigi ve hangi dugmeleri
+  /// cevirdigi.
   String get effectKey {
     final boxKey = List<Pos>.of(boxes)..sort(_byPosition);
     final collapsedKey = List<Pos>.of(collapsed)..sort(_byPosition);
-    return '$player|${boxKey.join(',')}|${collapsedKey.join(',')}';
+    final latchedKey = List<int>.of(latched)..sort();
+    return '$player|${boxKey.join(',')}|${collapsedKey.join(',')}'
+        '|${latchedKey.join(',')}';
   }
 
   void restartLevel() {
@@ -155,6 +163,7 @@ class GameState {
     ghosts = List<Pos>.filled(recordings.length, level.spawn, growable: true);
     boxes = List<Pos>.of(level.boxSpawns);
     collapsed = <Pos>{};
+    latched = <int>{};
     turn = 0;
   }
 
@@ -182,8 +191,9 @@ class GameState {
       movers.add(_Mover(-1, action));
     }
 
-    final vacated = _resolve(movers, open);
-    _collapseVacatedFragileTiles(vacated);
+    final outcome = _resolve(movers, open);
+    _collapseVacatedFragileTiles(outcome.vacated);
+    _flipTogglesEnteredThisTurn(outcome.entered);
 
     turn++;
     if (player == level.exit) {
@@ -217,6 +227,7 @@ class GameState {
     ghosts = List<Pos>.of(snapshot.ghosts);
     boxes = List<Pos>.of(snapshot.boxes);
     collapsed = Set<Pos>.of(snapshot.collapsed);
+    latched = Set<int>.of(snapshot.latched);
     recordings = snapshot.recordings.map(List<GameAction>.of).toList();
     current = List<GameAction>.of(snapshot.current);
     turn = snapshot.turn;
@@ -230,6 +241,7 @@ class GameState {
         List<Pos>.of(ghosts),
         List<Pos>.of(boxes),
         Set<Pos>.of(collapsed),
+        Set<int>.of(latched),
         recordings.map(List<GameAction>.of).toList(),
         List<GameAction>.of(current),
         turn,
@@ -241,7 +253,8 @@ class GameState {
     }
   }
 
-  /// Plakalarin uzerindeki beden sayisi esigi gecen gruplar.
+  /// Plakalarin uzerindeki beden sayisi esigi gecen ve dugmesi cevrilmis
+  /// gruplar.
   Set<int> _openGroups() {
     final counts = <Pos, int>{};
     void tally(Pos p) => counts[p] = (counts[p] ?? 0) + 1;
@@ -254,7 +267,7 @@ class GameState {
       tally(box);
     }
 
-    final groups = <int>{};
+    final groups = Set<int>.of(latched);
     counts.forEach((Pos position, int count) {
       final tile = level.tileAt(position);
       if (tile.isPlate && count >= tile.requiredBodies) {
@@ -266,18 +279,18 @@ class GameState {
 
   /// Hicbir ilerleme kalmayana kadar tekrar tekrar dener. Boylece "yankinin
   /// hemen arkasindan yurume" zinciri, listenin sirasindan bagimsiz cozulur.
-  ///
-  /// Bosaltilan kareleri dondurur; kirilgan zeminlerin cokmesi icin gerekir.
-  Set<Pos> _resolve(List<_Mover> movers, Set<int> open) {
-    final vacated = <Pos>{};
+  _Outcome _resolve(List<_Mover> movers, Set<int> open) {
+    final outcome = _Outcome();
     final pending = List<_Mover>.of(movers);
     while (pending.isNotEmpty) {
       final moved = <_Mover>[];
       for (final mover in pending) {
         final from = mover.isPlayer ? player : ghosts[mover.index];
-        if (_tryMove(mover, open)) {
+        final landed = _tryMove(mover, open);
+        if (landed != null) {
           moved.add(mover);
-          vacated.add(from);
+          outcome.vacated.add(from);
+          outcome.entered.add(landed);
         }
       }
       if (moved.isEmpty) {
@@ -285,7 +298,7 @@ class GameState {
       }
       pending.removeWhere(moved.contains);
     }
-    return vacated;
+    return outcome;
   }
 
   /// Uzerinden cekilen kirilgan zemin coker. Karede hala bir beden duruyorsa
@@ -302,32 +315,80 @@ class GameState {
     }
   }
 
-  bool _tryMove(_Mover mover, Set<int> open) {
+  /// Dugme, o tur uzerine **girilmisse** bir kez cevrilir. Ayni kareye iki
+  /// beden girse bile tek sayilir; iki kez cevirip basa donmek oyuncu icin
+  /// anlasilmaz olurdu.
+  void _flipTogglesEnteredThisTurn(Set<Pos> entered) {
+    for (final position in entered) {
+      final tile = level.tileAt(position);
+      if (tile.type != TileType.toggle) {
+        continue;
+      }
+      if (!latched.remove(tile.group)) {
+        latched.add(tile.group);
+      }
+    }
+  }
+
+  /// Hareketi dener; basarili olursa bedenin durdugu kareyi doner.
+  Pos? _tryMove(_Mover mover, Set<int> open) {
     final from = mover.isPlayer ? player : ghosts[mover.index];
     final to = from.moved(mover.action);
-    if (!_passable(to, open)) {
-      return false;
+    if (!_passable(to, open, mover.action)) {
+      return null;
     }
 
     // Hayaletler kati degildir (gecmisin yankisisin), sandiklar katidir.
     final boxIndex = boxes.indexOf(to);
     if (boxIndex >= 0) {
       final beyond = to.moved(mover.action);
-      if (!_passable(beyond, open) || boxes.contains(beyond)) {
-        return false;
+      if (!_crateCanEnter(beyond, open, mover.action) ||
+          boxes.contains(beyond)) {
+        return null;
       }
       boxes[boxIndex] = beyond;
     }
 
-    if (mover.isPlayer) {
-      player = to;
-    } else {
-      ghosts[mover.index] = to;
+    var landed = _slideOnIce(to, mover.action, open);
+
+    // Isinlanma yalnizca durulan karede tetiklenir ve zincirlenmez.
+    final partner = level.teleportPartners[landed];
+    if (partner != null && !boxes.contains(partner)) {
+      landed = partner;
     }
-    return true;
+
+    if (mover.isPlayer) {
+      player = landed;
+    } else {
+      ghosts[mover.index] = landed;
+    }
+    return landed;
   }
 
-  bool _passable(Pos p, Set<int> open) {
+  /// Buzda ayni yonde, bir engele kadar kayar.
+  Pos _slideOnIce(Pos start, GameAction direction, Set<int> open) {
+    var current = start;
+    var guard = 0;
+    while (level.tileAt(current).type == TileType.ice) {
+      if (++guard > level.rows * level.cols) {
+        break; // guvenlik: hicbir harita bunu tetiklememeli
+      }
+      final next = current.moved(direction);
+      if (!_passable(next, open, direction) || boxes.contains(next)) {
+        break;
+      }
+      current = next;
+    }
+    return current;
+  }
+
+  /// Sandiklar isinlanma kapisina itilemez; oyuncunun kaybettigi bir sandik
+  /// seviyeyi sessizce cozulemez yapardi.
+  bool _crateCanEnter(Pos p, Set<int> open, GameAction direction) =>
+      _passable(p, open, direction) &&
+      level.tileAt(p).type != TileType.teleport;
+
+  bool _passable(Pos p, Set<int> open, GameAction direction) {
     if (!level.inBounds(p)) {
       return false;
     }
@@ -341,13 +402,24 @@ class GameState {
         return fadingOpen;
       case TileType.fragile:
         return !collapsed.contains(p);
+      case TileType.oneWay:
+        return tile.oneWayDirection == direction;
       case TileType.floor:
       case TileType.exit:
       case TileType.plate:
       case TileType.heavyPlate:
+      case TileType.toggle:
+      case TileType.ice:
+      case TileType.teleport:
         return true;
     }
   }
 
   static int _byPosition(Pos a, Pos b) => a.y != b.y ? a.y - b.y : a.x - b.x;
+}
+
+/// Bir turun hareket sonucu: bosaltilan ve varilan kareler.
+class _Outcome {
+  final Set<Pos> vacated = <Pos>{};
+  final Set<Pos> entered = <Pos>{};
 }

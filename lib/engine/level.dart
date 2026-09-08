@@ -3,10 +3,13 @@ import 'models.dart';
 /// ASCII bir haritadan uretilen, degismeyen seviye tanimi.
 ///
 /// Harita alfabesi:
-///   "#" duvar, "." zemin, "P" baslangic, "E" cikis,
+///   "#" duvar, "." zemin, "P" baslangic, "E" cikis, "X" sandik
 ///   "1 2 3" plaka, "4 5 6" agir plaka (iki beden ister),
-///   "A B C" kapi (1-A, 2-B, 3-C), "T" solan kapi,
-///   "~" kirilgan zemin, "X" sandik.
+///   "7 8 9" dugme (basilinca kalici acar/kapatir)
+///   "A B C" kapi (1-A, 2-B, 3-C), "T" solan kapi
+///   "~" kirilgan zemin, "*" buz
+///   "^ v < >" tek yonlu gecit (yalnizca o yonde girilir)
+///   "( )" ve "[ ]" isinlanma cifti
 class Level {
   Level._({
     required this.id,
@@ -18,6 +21,7 @@ class Level {
     required this.spawn,
     required this.exit,
     required this.boxSpawns,
+    required this.teleportPartners,
     required this.maxTurns,
     required this.maxClones,
     required this.fadeTurns,
@@ -56,8 +60,13 @@ class Level {
       throw FormatException('Seviye $id: harita bos.');
     }
 
+    const oneWayChars = <String, int>{'^': 0, 'v': 1, '<': 2, '>': 3};
+    const teleportChars = <String, int>{'(': 0, ')': 0, '[': 1, ']': 1};
+
     final grid = <List<Tile>>[];
     final boxes = <Pos>[];
+    final teleportEnds = <int, List<Pos>>{};
+    var hasToggle = false;
     Pos? spawn;
     Pos? exit;
 
@@ -84,14 +93,25 @@ class Level {
           exit = here;
         } else if (char == '~') {
           row.add(Tile.fragile);
+        } else if (char == '*') {
+          row.add(Tile.ice);
         } else if (char == 'T') {
           row.add(Tile.fadingDoor);
         } else if (char == '1' || char == '2' || char == '3') {
           row.add(Tile(TileType.plate, int.parse(char) - 1));
         } else if (char == '4' || char == '5' || char == '6') {
           row.add(Tile(TileType.heavyPlate, int.parse(char) - 4));
+        } else if (char == '7' || char == '8' || char == '9') {
+          row.add(Tile(TileType.toggle, int.parse(char) - 7));
+          hasToggle = true;
         } else if (char == 'A' || char == 'B' || char == 'C') {
           row.add(Tile(TileType.door, char.codeUnitAt(0) - 65));
+        } else if (oneWayChars.containsKey(char)) {
+          row.add(Tile(TileType.oneWay, oneWayChars[char]!));
+        } else if (teleportChars.containsKey(char)) {
+          final pair = teleportChars[char]!;
+          row.add(Tile(TileType.teleport, pair));
+          teleportEnds.putIfAbsent(pair, () => <Pos>[]).add(here);
         } else {
           throw FormatException(
               'Seviye $id: bilinmeyen harita karakteri "$char".');
@@ -128,6 +148,18 @@ class Level {
           'Seviye $id: solan kapi var ama fadeTurns verilmemis.');
     }
 
+    // Isinlanma kapilari cift olmak zorunda; tek kalan bir kapi oyuncuyu
+    // sessizce yutardi.
+    final partners = <Pos, Pos>{};
+    teleportEnds.forEach((int pair, List<Pos> ends) {
+      if (ends.length != 2) {
+        throw FormatException('Seviye $id: $pair numarali isinlanma cifti '
+            '${ends.length} uclu; tam iki olmali.');
+      }
+      partners[ends[0]] = ends[1];
+      partners[ends[1]] = ends[0];
+    });
+
     if (spawn == null) {
       throw FormatException('Seviye $id: baslangic (P) yok.');
     }
@@ -145,10 +177,13 @@ class Level {
       spawn: spawn,
       exit: exit,
       boxSpawns: boxes,
+      teleportPartners: partners,
       maxTurns: maxTurns,
       maxClones: maxClones,
       fadeTurns: fadeTurns,
-      timingSensitive: timingSensitive,
+      // Dugmeli seviyelerde bir yankinin dugmeye **ne zaman** bastigi sonucu
+      // degistirir; cozucu bu seviyelerde adaylari tur bazinda ayirmali.
+      timingSensitive: timingSensitive || hasToggle,
       par: par,
       solution: solution,
       contentLeft: minX,
@@ -168,6 +203,9 @@ class Level {
   final Pos exit;
   final List<Pos> boxSpawns;
 
+  /// Her isinlanma kapisindan esine.
+  final Map<Pos, Pos> teleportPartners;
+
   /// Bir dongude oynanabilecek en fazla tur.
   final int maxTurns;
 
@@ -178,9 +216,10 @@ class Level {
   final int fadeTurns;
 
   /// Bir yankinin **ne zaman** hareket ettigi sonucu degistiriyorsa true.
-  /// Kirilgan zeminli seviyelerde olabilir: erken gecen yanki koprüyu
-  /// oyuncudan once yakar. Cozucu boyle seviyelerde adaylari tur bazinda da
-  /// ayirir; pahali oldugu icin yalnizca gerektiginde acilir.
+  /// Kirilgan zeminli ve dugmeli seviyelerde olabilir: erken gecen yanki
+  /// koprüyu oyuncudan once yakar, erken basan yanki dugmeyi ters cevirir.
+  /// Cozucu boyle seviyelerde adaylari tur bazinda da ayirir; pahali oldugu
+  /// icin yalnizca gerektiginde acilir.
   final bool timingSensitive;
 
   /// Seviyenin gercekten gerektirdigi en az yanki sayisi. Cozucu bunu bulur;

@@ -275,6 +275,116 @@ void main() {
     });
   });
 
+  group('dugme', () {
+    test('basilinca acik kalir, orada durmak gerekmez', () {
+      final state = GameState(_level('''
+#######
+#P7.AE#
+#######
+'''));
+      expect(state.isDoorOpen(0), isFalse);
+
+      state.step(GameAction.right); // dugmeye bas
+      expect(state.isDoorOpen(0), isTrue);
+
+      state.step(GameAction.right); // dugmeden ayril
+      expect(state.isDoorOpen(0), isTrue,
+          reason: 'dugme plakadan farkli: birakinca kapanmaz');
+
+      state.step(GameAction.right);
+      expect(state.player, const Pos(4, 1), reason: 'kapidan gecilebilmeli');
+    });
+
+    test('ikinci kez basmak geri kapatir', () {
+      final state = GameState(_level('''
+#######
+#P7..E#
+#######
+'''));
+      state.step(GameAction.right);
+      expect(state.isDoorOpen(0), isTrue);
+      state.step(GameAction.left);
+      state.step(GameAction.right); // ayni dugmeye tekrar
+      expect(state.isDoorOpen(0), isFalse);
+    });
+
+    test('cevrilen dugme yeni donguda sifirlanir', () {
+      final state = GameState(_level('''
+#######
+#P7..E#
+#######
+''', maxClones: 1));
+      state.step(GameAction.right);
+      expect(state.isDoorOpen(0), isTrue);
+      expect(state.startNewLoop(), LoopResult.ok);
+      expect(state.isDoorOpen(0), isFalse);
+    });
+  });
+
+  group('buz', () {
+    test('engele carpana kadar kayar', () {
+      final state = GameState(_level('''
+########
+#P**..E#
+########
+'''));
+      state.step(GameAction.right);
+      expect(state.player, const Pos(4, 1),
+          reason: 'iki buz karesini gecip ilk saglam zeminde durmali');
+    });
+
+    test('duvara dayali buzda tek kare kayar', () {
+      final state = GameState(_level('''
+######
+#P*#E#
+######
+'''));
+      state.step(GameAction.right);
+      expect(state.player, const Pos(2, 1));
+    });
+  });
+
+  group('tek yonlu gecit', () {
+    test('yalnizca kendi yonunde girilir', () {
+      final state = GameState(_level('''
+#######
+#P>..E#
+#######
+'''));
+      state.step(GameAction.right);
+      expect(state.player, const Pos(2, 1));
+      state.step(GameAction.right);
+      expect(state.player, const Pos(3, 1));
+
+      state.step(GameAction.left);
+      expect(state.player, const Pos(3, 1),
+          reason: 'ters yonden girilemez');
+    });
+  });
+
+  group('isinlanma kapisi', () {
+    test('esine tasir', () {
+      final state = GameState(_level('''
+#########
+#P(...)E#
+#########
+'''));
+      state.step(GameAction.right);
+      expect(state.player, const Pos(6, 1),
+          reason: 'ilk kapiya girince esine cikmali');
+      state.step(GameAction.right);
+      expect(state.won, isTrue);
+    });
+
+    test('tek uclu isinlanma kapisi reddedilir', () {
+      expect(() => _level('''
+#######
+#P(.E.#
+#######
+'''), throwsFormatException);
+    });
+  });
+
   group('harita cozumleyici', () {
     test('satir uzunlugu tutmayan harita reddedilir', () {
       expect(() => _level('''

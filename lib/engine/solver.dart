@@ -139,7 +139,10 @@ _Explored _explore(
       final standsOnPlate = level.tileAt(state.player).isPlate;
       final crateOnPlate =
           state.boxes.any((Pos box) => level.tileAt(box).isPlate);
-      if (standsOnPlate || crateOnPlate) {
+      // Dugme ceviren bir kopya hicbir plakada durmasa da ise yarar: cevirdigi
+      // kilit dongunun sonuna kadar acik kalir.
+      final flippedToggle = state.latched.isNotEmpty;
+      if (standsOnPlate || crateOnPlate || flippedToggle) {
         // Anahtar sandiklari ve cokmus zeminleri de icerir: ayni plakaya
         // farkli yollardan varmak gelecege farkli bir miras birakir.
         //
