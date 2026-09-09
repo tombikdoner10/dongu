@@ -289,6 +289,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An echo standing on a plate holds the gate open — long enough for you to walk through.'**
   String get introBody3;
+
+  /// No description provided for @endingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The loop is complete'**
+  String get endingTitle;
+
+  /// No description provided for @endingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In every loop, your past self carried you. That was the last one.'**
+  String get endingBody;
+
+  /// No description provided for @endingLevelsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Levels'**
+  String get endingLevelsLabel;
+
+  /// No description provided for @endingEchoesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Echoes spent'**
+  String get endingEchoesLabel;
+
+  /// No description provided for @endingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to start'**
+  String get endingBack;
+
+  /// No description provided for @endingOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending'**
+  String get endingOpen;
 }
 
 class _AppLocalizationsDelegate

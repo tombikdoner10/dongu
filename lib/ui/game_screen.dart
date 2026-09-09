@@ -9,6 +9,7 @@ import '../engine/models.dart';
 import '../l10n/app_localizations.dart';
 import '../services/progress_store.dart';
 import '../services/sfx.dart';
+import 'ending_screen.dart';
 import 'theme.dart';
 import 'widgets/board_view.dart';
 import 'widgets/control_pad.dart';
@@ -30,6 +31,19 @@ class _GameScreenState extends State<GameScreen> {
   Level? get _nextLevel {
     final index = kLevels.indexWhere((Level l) => l.id == widget.level.id);
     return index >= 0 && index + 1 < kLevels.length ? kLevels[index + 1] : null;
+  }
+
+  /// Son seviye de bitince kapanis ekranina cikilir; oyunun bittigi bir yerde
+  /// soylenmezse yuz bolumun sonu ucuncu bolumun sonuyla ayni gorunur.
+  bool get _gameComplete =>
+      kLevels.every((Level l) => widget.progress.isCompleted(l.id));
+
+  void _openEnding() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => EndingScreen(progress: widget.progress),
+      ),
+    );
   }
 
   void _act(GameAction action) {
@@ -177,11 +191,14 @@ class _GameScreenState extends State<GameScreen> {
                   echoes: l10n.echoesUsed(_state.cloneCount),
                   perfect: _state.cloneCount <= widget.level.par,
                   perfectLabel: l10n.perfect,
-                  nextLabel: l10n.nextLevel,
+                  nextLabel:
+                      _nextLevel == null ? l10n.endingOpen : l10n.nextLevel,
                   levelsLabel: l10n.levels,
-                  onNext: _nextLevel == null
-                      ? null
-                      : () => _openLevel(_nextLevel!),
+                  onNext: _nextLevel != null
+                      ? () => _openLevel(_nextLevel!)
+                      : _gameComplete
+                          ? _openEnding
+                          : null,
                   onLevels: () => Navigator.of(context).pop(),
                 ),
             ],

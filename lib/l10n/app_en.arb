@@ -8,7 +8,9 @@
   "levelLabel": "Level {number}",
   "@levelLabel": {
     "placeholders": {
-      "number": { "type": "int" }
+      "number": {
+        "type": "int"
+      }
     }
   },
   "turnsLabel": "Turns",
@@ -28,7 +30,9 @@
   "echoesUsed": "{count} echoes",
   "@echoesUsed": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "perfect": "Best possible",
@@ -41,5 +45,11 @@
   "introTitle2": "Your moves come back",
   "introBody2": "The closed loop replays everything you did, as an echo. You start over, fresh.",
   "introTitle3": "Leave your past behind",
-  "introBody3": "An echo standing on a plate holds the gate open — long enough for you to walk through."
+  "introBody3": "An echo standing on a plate holds the gate open — long enough for you to walk through.",
+  "endingTitle": "The loop is complete",
+  "endingBody": "In every loop, your past self carried you. That was the last one.",
+  "endingLevelsLabel": "Levels",
+  "endingEchoesLabel": "Echoes spent",
+  "endingBack": "Back to start",
+  "endingOpen": "Ending"
 }

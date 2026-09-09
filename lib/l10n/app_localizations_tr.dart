@@ -110,4 +110,23 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get introBody3 =>
       'Plakada duran bir yankı, kapıyı sen geçene kadar açık tutar.';
+
+  @override
+  String get endingTitle => 'Döngü tamamlandı';
+
+  @override
+  String get endingBody =>
+      'Her döngüde seni geçmiş kendin taşıdı. Bu sonuncusuydu.';
+
+  @override
+  String get endingLevelsLabel => 'Bölüm';
+
+  @override
+  String get endingEchoesLabel => 'Toplam yankı';
+
+  @override
+  String get endingBack => 'Başa dön';
+
+  @override
+  String get endingOpen => 'Kapanış';
 }

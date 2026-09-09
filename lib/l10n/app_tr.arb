@@ -31,5 +31,11 @@
   "introTitle2": "Hamlelerin geri döner",
   "introBody2": "Kapanan döngü, yaptığın her şeyi bir yankı olarak yeniden oynatır. Sen baştan başlarsın.",
   "introTitle3": "Geçmişini geride bırak",
-  "introBody3": "Plakada duran bir yankı, kapıyı sen geçene kadar açık tutar."
+  "introBody3": "Plakada duran bir yankı, kapıyı sen geçene kadar açık tutar.",
+  "endingTitle": "Döngü tamamlandı",
+  "endingBody": "Her döngüde seni geçmiş kendin taşıdı. Bu sonuncusuydu.",
+  "endingLevelsLabel": "Bölüm",
+  "endingEchoesLabel": "Toplam yankı",
+  "endingBack": "Başa dön",
+  "endingOpen": "Kapanış"
 }

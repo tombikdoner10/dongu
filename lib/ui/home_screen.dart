@@ -7,6 +7,7 @@ import '../engine/level.dart';
 import '../l10n/app_localizations.dart';
 import '../services/progress_store.dart';
 import '../services/sfx.dart';
+import 'ending_screen.dart';
 import 'game_screen.dart';
 import 'level_select_screen.dart';
 import 'theme.dart';
@@ -31,6 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
   late bool _soundOn = widget.progress.soundOn;
 
   /// Devam edilecek seviye: bitirilmemis ilk acik seviye.
+  bool get _gameComplete =>
+      kLevels.every((Level level) => widget.progress.isCompleted(level.id));
+
   Level get _resumeLevel {
     for (final level in kLevels) {
       if (widget.progress.isUnlocked(level.id) &&
@@ -138,6 +142,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           _push(LevelSelectScreen(progress: widget.progress)),
                       child: Text(l10n.levels),
                     ),
+                    // Kapanis bir kez gorulup kaybolmasin: oyunu bitiren
+                    // oyuncu ona buradan geri donebilir.
+                    if (_gameComplete)
+                      TextButton(
+                        onPressed: () =>
+                            _push(EndingScreen(progress: widget.progress)),
+                        child: Text(
+                          l10n.endingOpen,
+                          style: const TextStyle(color: DColors.exit),
+                        ),
+                      ),
                   ],
                 ),
               ),

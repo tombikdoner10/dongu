@@ -110,4 +110,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get introBody3 =>
       'An echo standing on a plate holds the gate open — long enough for you to walk through.';
+
+  @override
+  String get endingTitle => 'The loop is complete';
+
+  @override
+  String get endingBody =>
+      'In every loop, your past self carried you. That was the last one.';
+
+  @override
+  String get endingLevelsLabel => 'Levels';
+
+  @override
+  String get endingEchoesLabel => 'Echoes spent';
+
+  @override
+  String get endingBack => 'Back to start';
+
+  @override
+  String get endingOpen => 'Ending';
 }
