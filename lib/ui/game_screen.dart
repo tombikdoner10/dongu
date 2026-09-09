@@ -252,8 +252,11 @@ class _StatusLine extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 6),
-      child: SizedBox(
-        height: 42,
+      child: ConstrainedBox(
+        // Alt sinir kisa ipuclarinda duzenin ziplamasini onler; ust sinir yok,
+        // cunku dar ekranlarda uzun bir ipucu ucuncu satira tasiyor ve sabit
+        // yukseklik onu kirpiyordu. Tahta Expanded oldugu icin farki o karsilar.
+        constraints: const BoxConstraints(minHeight: 42),
         child: Center(
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 220),

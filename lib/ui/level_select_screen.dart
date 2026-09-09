@@ -17,6 +17,43 @@ class LevelSelectScreen extends StatefulWidget {
 }
 
 class _LevelSelectScreenState extends State<LevelSelectScreen> {
+  static const double _pad = 20;
+  static const double _gap = 14;
+  static const double _aspect = 1.35;
+
+  ScrollController? _controller;
+
+  /// Oyuncunun kaldigi yer: acik ama bitmemis ilk seviye.
+  int get _resumeIndex {
+    for (var i = 0; i < kLevels.length; i++) {
+      if (widget.progress.isUnlocked(kLevels[i].id) &&
+          !widget.progress.isCompleted(kLevels[i].id)) {
+        return i;
+      }
+    }
+    return kLevels.length - 1;
+  }
+
+  /// Liste yuz seviyeye cikinca hep bastan acilmak oyuncuyu her seferinde
+  /// onlarca satir kaydirmaya zorluyordu; kaldigi satirdan aciyoruz.
+  ScrollController _controllerFor(double width) {
+    if (_controller != null) {
+      return _controller!;
+    }
+    final cardWidth = (width - 2 * _pad - _gap) / 2;
+    final rowPitch = cardWidth / _aspect + _gap;
+    // Bir ust satir da gorunsun; nerede oldugu baglamiyla anlasilir.
+    final target = (_resumeIndex ~/ 2 - 1) * rowPitch;
+    return _controller =
+        ScrollController(initialScrollOffset: target > 0 ? target : 0);
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
   Future<void> _open(Level level) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -60,14 +97,17 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                 ),
               ),
               Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) =>
+                      GridView.builder(
+                  controller: _controllerFor(constraints.maxWidth),
+                  padding: const EdgeInsets.fromLTRB(_pad, 4, _pad, 24),
                   gridDelegate:
                       const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: 14,
-                    crossAxisSpacing: 14,
-                    childAspectRatio: 1.35,
+                    mainAxisSpacing: _gap,
+                    crossAxisSpacing: _gap,
+                    childAspectRatio: _aspect,
                   ),
                   itemCount: kLevels.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -84,6 +124,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                       onTap: unlocked ? () => _open(level) : null,
                     );
                   },
+                ),
                 ),
               ),
             ],

@@ -49,3 +49,6 @@ __pycache__/
 
 # Serena MCP calisma dosyalari
 .serena/
+
+# Cozucu ciktisi; dev/play_all.py icin uretilir, depoda tutulmaz.
+solutions.txt
