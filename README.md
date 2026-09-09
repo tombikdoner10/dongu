@@ -21,7 +21,7 @@ flutter run
 ## Doğrulama
 
 ```bash
-pwsh dev/check.ps1        # flutter analyze + 343 test, ~10 sn
+pwsh dev/check.ps1        # flutter analyze + 836 test, ~15 sn
 ```
 
 Geliştirme boyunca kullanılan tek doğrulama budur. Emülatör açmak bunun onlarca

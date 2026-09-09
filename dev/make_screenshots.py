@@ -3,7 +3,13 @@
 Cozumler dev/solution_export.dart ciktisindan okunur; boylece "guzel an"
 elle aranmaz, istenen hamlede durdurulur.
 
+    dart run dev/solution_export.dart > solutions.txt
     python dev/make_screenshots.py solutions.txt
+
+Gezinme koordinatla kart aramaz. Istenen seviyeden onceki butun bolumler
+bitmis gibi tohumlanir; uygulama "Oyna" dedigimizde zaten oraya acilir.
+Eski surum kartlari kaydirarak buluyordu ve haritalar degisince sessizce
+yanlis ekrani cekiyordu - iki kare birebir ayni cikmisti.
 """
 
 import os
@@ -21,16 +27,12 @@ OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
 TAPS = {"U": (540, 1741), "D": (540, 2053), "L": (360, 1898),
         "R": (718, 1898), "W": (540, 1898)}
 NEW_LOOP = (540, 2232)
-LEVELS_BUTTON = (540, 1573)
-CARD_6 = (792, 1128)     # ilk ekranda 6. seviye karti
-CARD_22 = (792, 2040)    # sona kaydirildiginda 22. seviye karti
-
-PARS = {1: 0, 2: 1, 3: 1, 4: 2, 5: 1, 6: 2, 7: 1, 8: 1, 9: 2, 10: 2, 11: 1,
-        12: 2, 13: 2, 14: 1, 15: 2, 16: 2, 17: 0, 18: 1, 19: 2, 20: 2, 21: 1,
-        22: 2, 23: 1}
+PLAY = (540, 1406)
+LEVELS = (540, 1574)
+ENDING = (540, 1645)   # yalnizca oyun bitince cikan baglanti
 
 
-def adb(*args, timeout=60):
+def adb(*args, timeout=90):
     return subprocess.run([ADB, *args], capture_output=True, text=True,
                           timeout=timeout)
 
@@ -50,16 +52,19 @@ def shot(name):
     print(f"{name:28s} {len(raw) / 1024:6.1f} KB", flush=True)
 
 
-def seed_completed():
-    """Butun seviyeler par ile bitirilmis: kilitler acik, yildizlar gorunur."""
+def seed(done_through, pars, locale="tr"):
+    """1..done_through arasi par ile bitirilmis; sonrasi kilitli.
+
+    Boylece hem yildizlar gorunur hem de "Oyna" tam istenen bolume acilir.
+    """
     rows = "\n".join(
-        f'    <long name="flutter.best_{k}" value="{v}" />'
-        for k, v in sorted(PARS.items()))
+        f'    <long name="flutter.best_{i}" value="{pars[i]}" />'
+        for i in range(1, done_through + 1))
     local = os.path.join(os.environ["TEMP"], "dongu_shot_prefs.xml")
     with open(local, "w", encoding="utf-8") as handle:
         handle.write(
             "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n"
-            '    <string name="flutter.locale">tr</string>\n'
+            f'    <string name="flutter.locale">{locale}</string>\n'
             '    <boolean name="flutter.introSeen" value="true" />\n'
             '    <boolean name="flutter.sound" value="false" />\n'
             f"{rows}\n</map>\n")
@@ -68,61 +73,71 @@ def seed_completed():
     adb("shell", f"run-as {PKG} cp /data/local/tmp/shot_prefs.xml {PREFS}")
 
 
+def launch(wait=15):
+    adb("shell", "am", "start", "-n", f"{PKG}/.MainActivity")
+    time.sleep(wait)
+
+
 def play(loops, stop_before=0):
     """Cozumu oynar; son dongunun son `stop_before` hamlesini yapmaz."""
     for index, loop in enumerate(loops):
         moves = loop
         if index == len(loops) - 1 and stop_before:
-            moves = loop[:-stop_before]
+            moves = loop[:len(loop) - stop_before]
         for move in moves:
             tap(*TAPS[move])
         if index < len(loops) - 1:
-            tap(*NEW_LOOP, wait=1.0)
-    time.sleep(1.0)
+            tap(*NEW_LOOP, wait=1.1)
+    time.sleep(1.2)
 
 
 def load(path):
-    solutions = {}
+    pars, loops = {}, {}
     for line in open(path, encoding="utf-8"):
         line = line.strip()
         if line and "|" in line:
-            level_id, _, loops = line.split("|", 2)
-            solutions[int(level_id)] = loops.split(",")
-    return solutions
+            level_id, par, rest = line.split("|", 2)
+            pars[int(level_id)] = int(par)
+            loops[int(level_id)] = rest.split(",")
+    return pars, loops
+
+
+def level_shot(name, level_id, pars, loops, stop_before):
+    """Istenen bolumu acar, cozumu belli bir ana kadar oynar, kareyi alir."""
+    seed(level_id - 1, pars)
+    launch()
+    tap(*PLAY, wait=3.2)
+    play(loops[level_id], stop_before=stop_before)
+    shot(name)
 
 
 def main():
-    solutions = load(sys.argv[1])
+    pars, loops = load(sys.argv[1])
+    total = max(pars)
 
-    seed_completed()
-    adb("shell", "am", "start", "-n", f"{PKG}/.MainActivity")
-    time.sleep(20)
-
+    # 1-2: ana ekran ve liste. Yarisi bitmis bir kayit hem yildizlari hem
+    # kilitleri gosterir; liste artik kalinan yerden aciliyor.
+    seed(59, pars)
+    launch()
     shot("01-ana-ekran.png")
-
-    tap(*LEVELS_BUTTON, wait=2.5)
+    tap(*LEVELS, wait=2.5)
     shot("02-seviyeler.png")
 
-    # 6. seviye: iki yanki plakalarda, kapilar acik, oyuncu koridorda.
-    tap(*CARD_6, wait=2.5)
-    play(solutions[6], stop_before=9)
-    shot("03-yankilar.png")
-    adb("shell", "input", "keyevent", "4")
-    time.sleep(1.5)
+    # 3: iki yanki iki plakada, ucuncu kilidi dugme aciyor; uc kapi da acik.
+    level_shot("03-yankilar.png", 78, pars, loops, stop_before=4)
 
-    # 22. seviye: catlak zemin, agir plaka ve solan kapi bir arada.
-    for _ in range(5):
-        adb("shell", "input", "swipe", "540", "1800", "540", "700", "250")
-        time.sleep(0.8)
-    tap(*CARD_22, wait=2.5)
-    play(solutions[22], stop_before=4)
-    shot("04-mekanikler.png")
+    # 4: bastan asagi buz. Kayma, dugme, plaka ve iki kapi tek karede.
+    level_shot("04-mekanikler.png", 94, pars, loops, stop_before=1)
 
-    # Ayni seviyeyi bitirip kazanma ekranini yakala.
-    for move in solutions[22][-1][-4:]:
-        tap(*TAPS[move])
-    time.sleep(2.0)
-    shot("05-kazanma.png")
+    # 5: kazanma katmani.
+    level_shot("05-kazanma.png", 98, pars, loops, stop_before=0)
+
+    # 6: kapanis ekrani. Halka 0.62'de kapanip oyuncu merkeze cekiliyor;
+    # yaklasik dorduncu saniyede tam kare olusuyor.
+    seed(total, pars)
+    launch()
+    tap(*ENDING, wait=4.2)
+    shot("06-kapanis.png")
 
     print(f"\nEkran goruntuleri: {OUT}")
 

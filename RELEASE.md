@@ -84,7 +84,7 @@ Mağaza metinleri hazır: `store/listing-tr.md` ve `store/listing-en.md`.
 |---|---|---|
 | Uygulama simgesi 512×512 | `store/icon-512.png` | hazır |
 | Öne çıkan görsel 1024×500 | `store/feature-1024x500.png` | hazır |
-| Telefon ekran görüntüsü (en az 2, en fazla 8) | `store/screenshots/` | hazır |
+| Telefon ekran görüntüsü (en az 2, en fazla 8) | `store/screenshots/` | 6 kare hazır |
 
 Görsellerin tamamı kod içinde geometriyle üretildi; hazır görsel, stok fotoğraf
 veya üçüncü taraf font kullanılmadı.
@@ -143,7 +143,7 @@ Play'e her yeni yüklemede **`+` sonrası sayı artmak zorunda**.
 ## Yayın öncesi son kontrol
 
 ```bash
-pwsh dev/check.ps1                      # analiz + 343 test
+pwsh dev/check.ps1                      # analiz + 836 test
 dart run dev/level_report.dart          # 100 seviyenin tamamı çözülebilir mi
 flutter build appbundle --release       # yükleme paketi
 ```
