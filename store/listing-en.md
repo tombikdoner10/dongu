@@ -29,6 +29,10 @@ WHAT IS INSIDE
 • Heavy plates: they need two bodies, so stack two echoes on one tile
 • Cracked ground: it caves in the moment you step off, with no way back
 • Fading gates: open only during the first turns of each loop
+• Switches: pressed once and they stay — nobody has to wait on them
+• Ice: no stopping, you slide until something blocks the way
+• One-way passages: whatever goes in does not come back out
+• Portals: across the map in a single step
 • Every level has a par — can you finish it with the fewest echoes possible?
 • Unlimited undo. There is no wrong move, so experiment freely.
 

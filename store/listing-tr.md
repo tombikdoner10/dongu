@@ -29,6 +29,10 @@ NELER VAR
 • Ağır plakalar: açılmaları için iki beden ister, iki yankını aynı kareye yığ
 • Çatlak zeminler: üstünden çekilince çöker, geri dönüş yok
 • Solan kapılar: her döngünün yalnızca ilk turlarında açık
+• Düğmeler: bir kez basılır, açık kalır — kimsenin beklemesi gerekmez
+• Buz: durmak yok, bir engele çarpana kadar kayarsın
+• Tek yönlü geçitler: girdiğin yerden geri çıkamazsın
+• Işınlanma kapıları: haritanın öbür ucuna tek adımda
 • Her seviyenin bir "par" değeri var — mümkün olan en az yankıyla bitirebilir misin?
 • Sınırsız geri alma. Yanlış hamle diye bir şey yok, denemekten çekinme.
 
