@@ -19,7 +19,9 @@ if (hasReleaseKey) {
 
 android {
     namespace = "com.egeayvaz.dongu"
-    compileSdk = flutter.compileSdkVersion
+    // Flutter 3.32 varsayilan olarak 35 veriyor; Play Console yeni yuklemelerde
+    // en az hedef API 36 istiyor. Derleme hedefi de en az hedef kadar olmali.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -34,7 +36,7 @@ android {
     defaultConfig {
         applicationId = "com.egeayvaz.dongu"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
